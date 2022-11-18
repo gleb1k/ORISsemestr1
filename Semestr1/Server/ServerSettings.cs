@@ -9,8 +9,8 @@ namespace Semestr1.Server
 {
     public class ServerSettings
     {
-        static public string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SteamDB;Integrated Security=True";
-        public int Port { get; set; } = 7700;
+        static public string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=AnimeDB;Integrated Security=True";
+        public int Port { get; set; } = 8800;
         public string Path { get; set; } = @"./site/";
         public ServerSettings(int port, string path)
         {

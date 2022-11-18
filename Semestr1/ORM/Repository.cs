@@ -1,6 +1,6 @@
 ﻿using Semestr1.Server;
 using Semestr1.Models;
-using Semestr1.Orm;
+using Semestr1.ORM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +34,7 @@ namespace Semestr1.ORM
         public void Update(T entity)
         {
             var myORM = new MyORM(connectionString);
+            myORM.Insert<T>(entity);
         }
     }
 }

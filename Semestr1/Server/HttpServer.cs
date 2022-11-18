@@ -60,7 +60,6 @@ namespace Semestr1.Server
         {
             while (_httpListener.IsListening)
             {
-                //_httpListener.BeginGetContext(new AsyncCallback(ListenerCallback), _httpListener);
                 var context = await _httpListener.GetContextAsync();
 
                 if (MethodHandler(context)) return;
@@ -143,14 +142,21 @@ namespace Semestr1.Server
 
             object[] queryParams = null;
 
-            object[] queryParams2 = strParams.Skip(1).Select(x => (object)x).ToArray();
+            var methodParams = method.GetParameters();
+            
 
-            if (_httpContext.Request.HttpMethod.Equals(HttpReqests.GET))
+            if (_httpContext.Request.HttpMethod == HttpReqests.GET.ToString() )
             {
                 //GET
                 queryParams = strParams.Skip(1).Select(x => (object)x).ToArray();
 
-                var result = method.Invoke(Activator.CreateInstance(controller), queryParams2);
+                //меняю тип
+                for (int i = 0; i < queryParams.Length; i++)
+                {
+                    queryParams[i] = Convert.ChangeType(queryParams[i], methodParams[i].ParameterType);
+                }
+
+                var result = method.Invoke(Activator.CreateInstance(controller), queryParams);
 
                 response.ContentType = "Application/json";
 
@@ -165,9 +171,13 @@ namespace Semestr1.Server
             else
             {
                 //POST
-                queryParams = GetRequestData(request);
+                queryParams = GetLoginAndPassword(request);
 
-
+                //меняю тип
+                for (int i = 0; i < queryParams.Length; i++)
+                {
+                    queryParams[i] = Convert.ChangeType(queryParams[i], methodParams[i].ParameterType);
+                }
 
                 response.Headers.Set("Content-Type", "text/html");
                 response.StatusCode = 201;
@@ -181,39 +191,26 @@ namespace Semestr1.Server
 
                 output.Close();
             }
-            //switch (methodURI)
-            //{
-            //    case "getaccounts":
-            //        //параметров нет
-            //        break;
-            //    case "getaccountbyid":
-            //        object[] temp = new object[1] { Convert.ToInt32(strParams[1]) };
-            //        queryParams = temp;
-            //        break;
-            //    case "saveaccount":
-            //        //колхоз, как красиво написать?? (чтобы не переименовывать переменную)
-            //        object[] temp1 = GetRequestData(request);
-            //        queryParams = temp1;
-            //        break;
-            //}
 
             Listening();
 
             return true;
         }
+
         //прием данных с полей логин и пароль (ретурнуть словарь)
-        public string[] GetRequestData(HttpListenerRequest request)
+        public string[] GetLoginAndPassword(HttpListenerRequest request)
         {
             if (!request.HasEntityBody)
             {
                 Console.WriteLine("No client data was sent with the request.");
                 return null;
             }
-            System.IO.Stream body = request.InputStream;
-            System.Text.Encoding encoding = request.ContentEncoding;
-            System.IO.StreamReader reader = new System.IO.StreamReader(body, encoding);
+            Stream body = request.InputStream;
+            Encoding encoding = request.ContentEncoding;
+
+            StreamReader reader = new StreamReader(body, encoding);
             string s = reader.ReadToEnd();
-            Console.WriteLine(s);
+
             body.Close();
             reader.Close();
 
@@ -224,10 +221,17 @@ namespace Semestr1.Server
             string password = new string(charPassword);
 
             string[] strParams = new string[] { login, password };
-            return strParams;
-        }
 
-        //Выводит ошибку
+            var dict = new Dictionary<string, string>
+            {
+                { "Login", login},
+                { "Password", password},
+            };
+            //TODO
+
+            return strParams;
+
+        }
         private void Show404(ref HttpListenerResponse response, ref byte[] buffer)
         {
             response.Headers.Set("Content-Type", "text/html");

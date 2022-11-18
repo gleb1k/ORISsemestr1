@@ -24,7 +24,7 @@ namespace Semestr1.FileStuf
             if (Directory.Exists(filePath))
             {
                 //Каталог
-                filePath = filePath + "/index.html";
+                filePath = filePath + "/main_page.html";
                 if (File.Exists(filePath))
                 {
                     buffer = File.ReadAllBytes(filePath);

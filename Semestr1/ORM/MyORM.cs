@@ -97,6 +97,7 @@ namespace Semestr1.ORM
                 while (reader.Read())
                 {
                     T obj = (T)Activator.CreateInstance(t);
+                    var temp = t.GetProperties().ToList();
                     t.GetProperties().ToList().ForEach(x =>
                     x.SetValue(obj, reader[x.Name]));
 
@@ -192,6 +193,16 @@ namespace Semestr1.ORM
                 $"WHERE {argsWithoutDog[0]}={argsWithDog[0]}";
 
             ExecuteNonQuery(nonQuery);
+        }
+        /// <summary>
+        /// Checking existence of entity by id
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public bool IsExist<T>(T entity)
+        {
+            return false;
         }
     }
 }
