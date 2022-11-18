@@ -119,7 +119,7 @@ namespace Semestr1.ORM
             var values = args.Select(value => $"@{value.GetValue(entity)}").ToArray();
 
             var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
-            var argsWithoutDog = args.Select(value => $"{value.ToString().Split(" ")[1]}").ToArray();
+            var argsWithoutDog = args.Select(x => x.Name).ToArray();
 
             foreach (var parameter in args)
             {
@@ -146,7 +146,7 @@ namespace Semestr1.ORM
             var values = args.Select(value => $"@{value.GetValue(entity)}").ToArray();
 
             var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
-            var argsWithoutDog = args.Select(value => $"{value.ToString().Split(" ")[1]}").ToArray();
+            var argsWithoutDog = args.Select(x => x.Name).ToArray();
 
             foreach (var parameter in args)
             {
@@ -181,7 +181,7 @@ namespace Semestr1.ORM
             var values = args.Select(value => $"@{value.GetValue(entity)}").ToArray();
 
             var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
-            var argsWithoutDog = args.Select(value => $"{value.ToString().Split(" ")[1]}").ToArray();
+            var argsWithoutDog = args.Select(x => x.Name).ToArray();
 
             foreach (var parameter in args)
             {
