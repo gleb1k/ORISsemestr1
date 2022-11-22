@@ -133,6 +133,7 @@ namespace Semestr1.ORM
 
             ExecuteNonQuery(nonQuery);
         }
+        //todo
         /// <summary>
         /// Updating field by VALUES. ID doesn't matter!
         /// </summary>
@@ -200,9 +201,16 @@ namespace Semestr1.ORM
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public bool IsExist<T>(T entity)
+        public bool IsExistById<T>(int id)
         {
-            return false;
+            Type t = typeof(T);
+            string nonQuery = $"Select * from {t.Name}s " +
+                $"WHERE Id={id}";
+            if (ExecuteNonQuery(nonQuery) > 0)
+            {
+                return true;
+            }
+            else return false;
         }
     }
 }

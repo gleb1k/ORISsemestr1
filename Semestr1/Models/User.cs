@@ -8,15 +8,15 @@ namespace Semestr1.Models
 {
     public class User : EntityBase
     {
-        public string Login { get; set; }
+        public string Login { get; }
         public string Password { get; set; }
-        public int Age { get; set; }
-        public string Mobile{ get; set; }
-        public string FavoriteAnimeName { get; set; }
+        public int? Age { get; set; }
+        public string? Mobile{ get; set; }
+        public string? FavoriteAnimeName { get; set; }
 
         public User() { }
 
-        public User(int id, string login, string password, int age, string mobile, string favoriteAnime)
+        public User(int id, string login, string password, int? age, string? mobile, string? favoriteAnime)
         {
             Id = id;
             Login = login;
@@ -25,5 +25,13 @@ namespace Semestr1.Models
             Mobile = mobile;
             FavoriteAnimeName = favoriteAnime;
         }
+        ///TODO изменение пароля
+        //public void ChangePassword(string oldPassword, string newPassword)
+        //{
+        //    if (Password != oldPassword)
+        //        throw new Exception();
+
+        //    Password = newPassword;
+        //}
     }
 }

@@ -28,7 +28,7 @@ namespace Semestr1.Pages
             return true;
         }
         /// <summary>
-        /// Читает данные из папки. Папка называется также как и HTML документ
+        /// Читает данные из папки. ПАПКА ДОЛЖНА НАЗЫВАТЬСЯ ТАКЖЕ КАК И HTML ДОКУМЕНТ!!
         /// </summary>
         /// <param name="directory"></param>
         /// <returns></returns>

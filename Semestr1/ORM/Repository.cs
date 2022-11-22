@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace Semestr1.ORM
 {
+    /// <summary>
+    /// USELESS
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Repository<T> : IRepository<T> where T : EntityBase
     {
         private readonly string connectionString = ServerSettings._connectionString;
@@ -17,24 +21,26 @@ namespace Semestr1.ORM
             var myORM = new MyORM(connectionString);
             myORM.Insert(entity);
         }
-
         public void Delete(T entity)
         {
             var myORM = new MyORM(connectionString);
             myORM.Delete(entity);
         }
-
+        public List<T> GetAll()
+        {
+            var myORM = new MyORM(connectionString);
+            return myORM.Select<T>().ToList();
+        }
         public T GetById(int id)
         {
             var myORM = new MyORM(connectionString);
             var table = myORM.Select<T>();
             return table.Where(entity => entity.Id == id).FirstOrDefault();
         }
-
         public void Update(T entity)
         {
             var myORM = new MyORM(connectionString);
-            myORM.Insert<T>(entity);
+            myORM.Update(entity);
         }
     }
 }

@@ -13,24 +13,24 @@ namespace Semestr1.Contollers
     [HttpController("users")]
     public class Users
     {
+        private Repository<User> repository = new Repository<User>();
         [HttpGET("getuser")]
         public User GetUser(int id)
         {
-            var rep = new Repository<User>();
-            return rep.GetById(id);
+            return repository.GetById(id);
         }
 
         [HttpGET("getusers")]
         public List<User> GetUsers()
         {
-            var myORM = new MyORM(ServerSettings._connectionString);
-            return myORM.Select<User>().ToList();
+            return repository.GetAll();
         }
 
         [HttpPOST("registerPOST")]
-        public static void Register(string login, string password)
+        public void Register(string login, string password)
         {
-            var myORM = new MyORM(ServerSettings._connectionString);
+            var newUser = new User(0, login, password, null, null, null);
+            repository.Create(newUser);
         }
 
         [HttpPOST("loginPOST")]
