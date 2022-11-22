@@ -10,7 +10,7 @@ using Semestr1.Server;
 
 namespace Semestr1.Contollers
 {
-    [HttpController("accounts")]
+    [HttpController("users")]
     public class Users
     {
         [HttpGET("getuser")]
@@ -27,13 +27,13 @@ namespace Semestr1.Contollers
             return myORM.Select<User>().ToList();
         }
 
-        [HttpPOST("register")]
+        [HttpPOST("registerPOST")]
         public static void Register(string login, string password)
         {
             var myORM = new MyORM(ServerSettings._connectionString);
         }
 
-        [HttpPOST("login")]
+        [HttpPOST("loginPOST")]
         public static bool Login(string login, string password)
         {
             var myORM = new MyORM(ServerSettings._connectionString);

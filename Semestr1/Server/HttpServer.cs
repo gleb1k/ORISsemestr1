@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Semestr1.FileStuf;
 
 namespace Semestr1.Server
 {
@@ -63,43 +62,14 @@ namespace Semestr1.Server
                 var context = await _httpListener.GetContextAsync();
 
                 if (MethodHandler(context)) return;
-
-                StaticFiles(context.Response, context.Request);
-            }
-
-        }
-        private void StaticFiles(HttpListenerResponse response, HttpListenerRequest request)
-        {
-            try
-            {
-                byte[] buffer;
-
-                var rawurl = request.RawUrl;
-
-                buffer = Files.GetFile(rawurl.Replace("%20", " "));
-
-                //Задаю расширения для файлов
-                Files.GetExtension(ref response, "." + rawurl);
-
-                //Неправильно задан запрос / не найдена папка
-                if (buffer != null)
-                {
-                    Stream output = response.OutputStream;
-                    output.Write(buffer, 0, buffer.Length);
-                    //закрываем поток
-                    output.Close();
-                }
                 else
-                    Show404(ref response, ref buffer);
-                Listening();
+                {
+                    ShowPage(context);
+                }    
+
+                //StaticFiles(context.Response, context.Request);
             }
 
-            catch
-            {
-                // ???
-                Console.WriteLine("Возникла ошибка. Сервер остановлен");
-                Stop();
-            }
         }
         private bool MethodHandler(HttpListenerContext _httpContext)
         {
@@ -129,16 +99,17 @@ namespace Semestr1.Server
 
             if (strParams.Length == 0) return false;
 
-            string methodURI = strParams[0];
-
             var methods = controller.GetMethods().Where(t => t.GetCustomAttributes(true)
                                                               .Any(attr => attr.GetType().Name == $"Http{_httpContext.Request.HttpMethod}"));
 
+            string methodURI = strParams[0];
             var method = methods.FirstOrDefault(x => _httpContext.Request.HttpMethod switch
             {
                 "GET" => x.GetCustomAttribute<HttpGET>()?.MethodURI == methodURI,
                 "POST" => x.GetCustomAttribute<HttpPOST>()?.MethodURI == methodURI
             });
+
+            if (method == null) return false;
 
             object[] queryParams = null;
 
@@ -155,6 +126,8 @@ namespace Semestr1.Server
                 {
                     queryParams[i] = Convert.ChangeType(queryParams[i], methodParams[i].ParameterType);
                 }
+
+                //тут чето делать
 
                 var result = method.Invoke(Activator.CreateInstance(controller), queryParams);
 
@@ -179,7 +152,7 @@ namespace Semestr1.Server
                     queryParams[i] = Convert.ChangeType(queryParams[i], methodParams[i].ParameterType);
                 }
 
-                response.Headers.Set("Content-Type", "text/html");
+                
                 response.StatusCode = 201;
                 response.ContentEncoding = Encoding.UTF8;
 
@@ -232,17 +205,40 @@ namespace Semestr1.Server
             return strParams;
 
         }
-        private void Show404(ref HttpListenerResponse response, ref byte[] buffer)
+        private void Show404(ref HttpListenerResponse response)
         {
             response.Headers.Set("Content-Type", "text/html");
             response.StatusCode = 404;
             response.ContentEncoding = Encoding.UTF8;
             string err = "<h1>404<h1> <h2>The resource can not be found.<h2>";
-            buffer = Encoding.UTF8.GetBytes(err);
+            byte[] buffer = Encoding.UTF8.GetBytes(err);
             Stream output = response.OutputStream;
             output.Write(buffer, 0, buffer.Length);
             //закрываем поток
             output.Close();
+        }
+        private void ShowPage(HttpListenerContext _httpContext)
+        {
+            var response = _httpContext.Response;
+            try
+            {
+                response.Headers.Set("Content-Type", "text/html");
+                string[] strParams = _httpContext.Request.Url
+                                        .Segments
+                                        .Skip(2)
+                                        .Select(s => s.Replace("/", ""))
+                                        .ToArray();
+                string directory = strParams[0];
+                if (!Pages.Pages.ShowHTMLPage(directory, ref response))
+
+                    Show404(ref response);
+            }
+            catch
+            {
+                Show404(ref response);
+                Listening();
+            }
+            Listening();
         }
 
         public void Dispose()

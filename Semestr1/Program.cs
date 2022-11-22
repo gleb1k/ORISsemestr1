@@ -3,7 +3,6 @@ using Semestr1.ORM;
 using Semestr1.Server;
 using Semestr1.Contollers;
 using Semestr1.Attributes;
-using Semestr1.FileStuf;
 
 bool _appIsRunning = true;
 var myorm = new MyORM(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=AnimeDB;Integrated Security=True");
