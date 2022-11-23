@@ -11,6 +11,7 @@ namespace Semestr1.Models
         public string Name { get; set; }
         public string Author { get; set; }
         public string Description { get; set; }
+        //УРЛ картинки
         public string Url { get; set; }
         public Anime(int id, string name, string author, string description, string url)
         {

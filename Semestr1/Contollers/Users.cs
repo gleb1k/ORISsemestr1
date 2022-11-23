@@ -7,43 +7,47 @@ using System.Text;
 using System.Threading.Tasks;
 using Semestr1.Attributes;
 using Semestr1.Server;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Semestr1.Contollers
 {
     [HttpController("users")]
     public class Users
     {
-        private Repository<User> repository = new Repository<User>();
+        private UserRepository rep = new UserRepository() ;
         [HttpGET("getuser")]
         public User GetUser(int id)
         {
-            return repository.GetById(id);
+            return rep.GetById(id);
         }
 
-        [HttpGET("getusers")]
-        public List<User> GetUsers()
+        //[HttpGET("getusers")]
+        //public List<User> GetUsers()
+        //{
+        //    return rep.GetAll();
+        //}
+        [HttpPOST("updatePOST")]
+        public bool? Update(string age, string mobile, string favoriteAnime)
         {
-            return repository.GetAll();
+            string login = "";
+            string password = "";
+            var user = new User(login, password, age, mobile, favoriteAnime);
+            throw new NotImplementedException();
         }
 
         [HttpPOST("registerPOST")]
-        public void Register(string login, string password)
+        public bool? Register(string login, string password)
         {
-            var newUser = new User(0, login, password, null, null, null);
-            repository.Create(newUser);
+            var newUser = new User(login, password, null, null, null);
+            return rep.Register(newUser);     
         }
 
         [HttpPOST("loginPOST")]
-        public static bool Login(string login, string password)
+        public bool? Login(string login, string password)
         {
-            var myORM = new MyORM(ServerSettings._connectionString);
-            int count = 0;
-            count += myORM.AddParameter("@login", login).AddParameter("@password", password)
-                .ExecuteNonQuery("select * from [dbo].[Table] where Login='@login' and Password='@password'");
-            if (count > 0)
-                return true;
-            else
-                return false;
+            var newUser = new User(login, password, null, null, null);
+            return rep.Login(newUser);
+            //todo вошел в систему
         }
 
     }

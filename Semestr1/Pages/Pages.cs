@@ -27,6 +27,18 @@ namespace Semestr1.Pages
             output.Close();
             return true;
         }
+        public static void Show404(ref HttpListenerResponse response)
+        {
+            response.Headers.Set("Content-Type", "text/html");
+            response.StatusCode = 404;
+            response.ContentEncoding = Encoding.UTF8;
+            string err = "<h1>404<h1><h2>The resource can not be found.<h2>";
+            byte[] buffer = Encoding.UTF8.GetBytes(err);
+            Stream output = response.OutputStream;
+            output.Write(buffer, 0, buffer.Length);
+            //закрываем поток
+            output.Close();
+        }
         /// <summary>
         /// Читает данные из папки. ПАПКА ДОЛЖНА НАЗЫВАТЬСЯ ТАКЖЕ КАК И HTML ДОКУМЕНТ!!
         /// </summary>

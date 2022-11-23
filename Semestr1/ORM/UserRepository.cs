@@ -70,35 +70,61 @@ namespace Semestr1.ORM
         private bool CheckExistenceByLigin(string login)
         {
             var myORM = new MyORM(connectionString);
-            string nonQuery = $"select * from Users where Login='{login}')";
-            return myORM.ExecuteNonQuery(nonQuery) > 0;
+            string nonQuery = $"select count(*) from Users where Login='{login}'";
+            return myORM.ExectureScalar<int>(nonQuery) > 0;
         }
-        /// <summary>
-        /// Registration user by login and password
-        /// </summary>
-        /// <param name="login"></param>
-        /// <param name="password"></param>
-        public void Register(string login, string password)
+        public bool Delete(User user)
         {
+            if (!CheckExistenceByLigin(user.Login))
+                return false;
+
             var myORM = new MyORM(connectionString);
-            string nonQuery = $"insert into Users (Login, Password) " +
-                $"values ({login},{password})";
+            string nonQuery = $"DELETE FROM Users where Login='{user.Login}'";
+
             myORM.ExecuteNonQuery(nonQuery);
+            return true;
         }
-
-        public void Delete(User user)
-        {
-            var myORM = new MyORM(connectionString);
-        }
-
+        //TODO
         public User GetById(int id)
         {
             throw new NotImplementedException();
         }
-
-        public void Update(User user)
+        public bool Update(User user)
         {
-            throw new NotImplementedException();
+            if (!CheckExistenceByLigin(user.Login))
+                return false;
+
+            var myORM = new MyORM(connectionString);
+
+            Type t = typeof(User);
+            var args = t.GetProperties();
+
+            var values = args.Select(value => $"@{value.GetValue(user)}").ToArray();
+
+            var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
+            var argsWithoutDog = args.Select(x => x.Name).ToArray();
+
+            foreach (var parameter in args)
+            {
+                var sqlParameter = new SqlParameter($"@{parameter.Name}", parameter.GetValue(user));
+                myORM._cmd.Parameters.Add(sqlParameter);
+            }
+            //todo ЕСЛИ В НЕ ИЗМЕНИЛ БД (ТОЕСТЬ ID ЕЩЕ ЕСТЬ, ТО РАБОТАТЬ НЕ БУДЕТ)
+            //Row = @Value. without ID
+            string setQuery = "";
+            for (int i = 0; i < args.Length; i++)
+            {
+                setQuery += $"{argsWithoutDog[i]}={argsWithDog[i]}, ";
+            }
+            setQuery = setQuery.Remove(setQuery.Length - 2, 2);
+
+            string nonQuery = $"UPDATE Users SET {setQuery} " +
+                $"FROM " +
+                $"(SELECT * FROM Users WHERE Login='{user.Login}') AS Selected " +
+                $"WHERE Users.Login = Selected.Login";
+
+            myORM.ExecuteNonQuery(nonQuery);
+            return true;
         }
 
 

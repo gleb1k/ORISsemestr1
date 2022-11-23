@@ -25,6 +25,7 @@ namespace Semestr1.ORM
             int noOfAffectedRows = 0;
             using (_connection)
             {
+                
                 _cmd!.CommandText = query;
                 _connection!.Open();
                 noOfAffectedRows = _cmd.ExecuteNonQuery();
@@ -98,8 +99,24 @@ namespace Semestr1.ORM
                 {
                     T obj = (T)Activator.CreateInstance(t);
                     var temp = t.GetProperties().ToList();
-                    t.GetProperties().ToList().ForEach(x =>
-                    x.SetValue(obj, reader[x.Name]));
+
+
+                    //Не работает тк NULLABLE INT
+                    //var tdsf = temp[2].PropertyType;
+
+                    //var tdsf3 = temp[2].PropertyType.Name;
+                    ////Convert.ChangeType(queryParams[i], methodParams[i].ParameterType)
+                    //for (int i=0; i<temp.Count; i++)
+                    //{
+                    //    if (temp[i].PropertyType.Equals(tdsf))
+                    //    {
+
+                    //        t = Nullable.GetUnderlyingType(t);
+                    //        var temp2 = Convert.ChangeType(temp[i], t);
+                    //    }
+                    //}
+                    temp.ForEach(x =>
+                    x.SetValue(obj,Convert.ChangeType(reader[x.Name], x.PropertyType)));
 
                     list.Add(obj);
                 }

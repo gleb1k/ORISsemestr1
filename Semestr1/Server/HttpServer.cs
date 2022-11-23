@@ -131,6 +131,14 @@ namespace Semestr1.Server
 
                 var result = method.Invoke(Activator.CreateInstance(controller), queryParams);
 
+                if (result != null && result is bool && (bool)result == false)
+                {
+                    
+                    Pages.Pages.Show404(ref response);
+                    Listening();
+                    return true;
+                }
+
                 response.ContentType = "Application/json";
 
                 byte[] buffer = Encoding.ASCII.GetBytes(JsonSerializer.Serialize(result));
@@ -152,17 +160,26 @@ namespace Semestr1.Server
                     queryParams[i] = Convert.ChangeType(queryParams[i], methodParams[i].ParameterType);
                 }
 
+                var result = method.Invoke(Activator.CreateInstance(controller), queryParams);
+                if (result != null && result is bool && (bool)result == false)
+                {
+                    Pages.Pages.Show404(ref response);
+                    Listening();
+                    return true;
+                }
                 
-                response.StatusCode = 201;
-                response.ContentEncoding = Encoding.UTF8;
+                //TODO
+                Pages.Pages.ShowHTMLPage(/*methodURI*/"profile",ref response);
+                //response.StatusCode = 201;
+                //response.ContentEncoding = Encoding.UTF8;
 
-                string message = $"<h1>201<h1> <h2>{queryParams[0]} {queryParams[1]}<h2>";
-                var buffer = Encoding.UTF8.GetBytes(message);
+                //string message = $"<h1>201<h1> <h2>{queryParams[0]} {queryParams[1]}<h2>";
+                //var buffer = Encoding.UTF8.GetBytes(message);
 
-                Stream output = response.OutputStream;
-                output.Write(buffer, 0, buffer.Length);
+                //Stream output = response.OutputStream;
+                //output.Write(buffer, 0, buffer.Length);
 
-                output.Close();
+                //output.Close();
             }
 
             Listening();
@@ -170,7 +187,7 @@ namespace Semestr1.Server
             return true;
         }
 
-        //прием данных с полей логин и пароль (ретурнуть словарь)
+        //прием данных с полей логин и пароль (ретурнуть словарь) Колхоз
         public string[] GetLoginAndPassword(HttpListenerRequest request)
         {
             if (!request.HasEntityBody)
@@ -188,7 +205,7 @@ namespace Semestr1.Server
             reader.Close();
 
             var charLogin = s.ToCharArray().Skip(6).TakeWhile(item => item != '&').ToArray();
-            string login = new string(charLogin);
+            string login = new string(charLogin).Replace("%40", "@");
 
             var charPassword = s.SkipWhile(item => item != '&').Skip(10).ToArray();
             string password = new string(charPassword);

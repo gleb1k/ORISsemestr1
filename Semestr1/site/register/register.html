@@ -5,25 +5,27 @@
 <head>
     <title>Registration</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link rel="shortcut icon" href="icons/icon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../icons/icon.ico" type="image/x-icon">
     <!--<link rel="stylesheet" href="header.css"> -->
     
     <meta charset="utf-8">
 </head>
 
 <body>
-    <form class="registration_form" method="POST" action="/users/registerPOST">
+    <form name="registration_form" class="registration_form" method="POST" action="/users/registerPOST" onsubmit="return validateForm()">
         <h1>Registration</h1>
         <div class="login_field">
             <div class="text">Email</div>
             <input class="edit" type="text" name="login" required>
+            <div class="error" id="loginErr"></div>
         </div>
         <div class="password_field">
             <div class="text">Password</div>
-            <input class="edit" type="password" name="password" required>
+            <input class="edit" type="password" names="password" required>
+            <div class="error" id="passErr"></div>
         </div>
         <div class="enter_btn_container">
-            <button class="enter_btn" type="submit">Register</button>
+            <button id="register" class="enter_btn" type="submit">Register</button>
         </div>
     </form>
 </body>

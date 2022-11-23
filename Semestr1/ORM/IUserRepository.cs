@@ -12,7 +12,7 @@ namespace Semestr1.ORM
         bool Register(User user);
         bool Login(User user);
         User GetById(int id);
-        void Update(User user);
-        void Delete(User entity);
+        bool Update(User user);
+        bool Delete(User entity);
     }
 }
