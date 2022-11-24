@@ -5,27 +5,33 @@
 <head>
     <title>Authorisation</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link rel="shortcut icon" href="icons/icon.ico" type="image/x-icon">
-    <!--<link rel="stylesheet" href="header.css"> -->
-    
+    <link rel="shortcut icon" href="/icons/icon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/login/login.css">
+    <!--<script type="text/javascript" src="/login/login.js"></script>-->
+
     <meta charset="utf-8">
 </head>
 
 <body>
-    <form class="authorisation_form" method="POST" action="http://localhost:8800/users/loginPOST">
-        <h1>Authorisation</h1>
-        <div class="login_field">
-            <div class="text">Email</div>
-            <input class="edit" type="text" name="login" required>
+    <a href="http://localhost:8800/anime/home">На главную</a>
+    <form class="sign-in-form test" name="registration_form" method="post" action="http://localhost:8800/users/loginPOST" onsubmit="return validateForm()">
+
+        <h1>Авторизация</h1>
+        <div class="login_field row">
+            <label class="sign-in-form__label">Email</label>
+            <input id="login" class="edit" type="text" placeholder="Введите e-mail" name="Login">
+            <div class="error" id="loginErr"></div>
         </div>
-        <div class="password_field">
-            <div class="text">Password</div>
-            <input class="edit" type="password" name="password" required>
+        <div class="password_field row">
+            <label class="sign-in-form__label">Password</label>
+            <input id="pass" class="edit" type="password" placeholder="Введите пароль" name="Password">
+            <div class="error" id="passErr"></div>
         </div>
         <div class="enter_btn_container">
-            <button class="enter_btn" type="submit" href="http://localhost:8800/main/main">Login</button>
+            <button class="enter_btn bad_submit" type="submit">Войти</button>
         </div>
     </form>
+
 </body>
 
-</html> 
+</html>

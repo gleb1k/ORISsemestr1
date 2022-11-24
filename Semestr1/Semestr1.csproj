@@ -7,8 +7,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="site\static\**" />
+    <EmbeddedResource Remove="site\static\**" />
+    <None Remove="site\static\**" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
+		<PackageReference Include="Scriban" Version="5.5.1" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="site\**\*.*">
@@ -19,9 +26,6 @@
 	  <None Update="site\icons\icon.ico">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="site\static\" />
 	</ItemGroup>
 
 </Project>

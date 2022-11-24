@@ -1,8 +1,12 @@
-﻿using Semestr1.Attributes;
+﻿using Azure.Core;
+using Semestr1.Attributes;
+using Semestr1.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -61,203 +65,65 @@ namespace Semestr1.Server
             {
                 var context = await _httpListener.GetContextAsync();
 
-                if (MethodHandler(context)) return;
-                else
+                var response = context.Response;
+                _ = Task.Run(async () =>
                 {
-                    ShowPage(context);
-                }    
-
-                //StaticFiles(context.Response, context.Request);
+                    try
+                    {
+                        var method = GetMethodByContext(context);
+                        if (method != null)
+                        {
+                            await (Task)method.Invoke(null, new object[] { context });
+                        }
+                        else
+                        {
+                            var temp = context.Request.Url.LocalPath;
+                            await context.ServerPage(context.Request.Url.LocalPath);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                        response.StatusCode = 500;
+                    }
+                    response.OutputStream.Close();
+                    response.Close();
+                });
             }
 
         }
-        private bool MethodHandler(HttpListenerContext _httpContext)
+        private Type? GetControllerByContext(HttpListenerContext context)
         {
-            // объект запроса
-            HttpListenerRequest request = _httpContext.Request;
+            var request = context.Request;
+            if (request.Url.Segments.Length < 2) return null;
 
-            // объект ответа
-            HttpListenerResponse response = _httpContext.Response;
-
-            //пустой url
-            if (_httpContext.Request.Url.Segments.Length < 2) return false;
-
-            string controllerName = _httpContext.Request.Url.Segments[1].Replace("/", "");
-
+            string controllerName = context.Request.Url.Segments[1].Replace("/", "");
             var assembly = Assembly.GetExecutingAssembly();
 
-            // ищет контроллер accounts
+            // ищет контроллер ПО НАЗВАНИЮ КЛАССА. Т.Е НАЗВАНИЕ КЛАССА ДОЛЖНО БЫТЬ РАВНО НАЗВАНИЮ СТРОКИ ПЕРЕДАННОЙ В АТРИБУТ!
             var controller = assembly.GetTypes().Where(t => Attribute.IsDefined(t, typeof(HttpController))).FirstOrDefault(c => c.Name.ToLower() == controllerName.ToLower());
 
-            if (controller == null) return false;
-
-            string[] strParams = _httpContext.Request.Url
-                                    .Segments
-                                    .Skip(2)
-                                    .Select(s => s.Replace("/", ""))
-                                    .ToArray();
-
-            if (strParams.Length == 0) return false;
-
+            //попытка сделать адекватно
+            //var classesWithHttpController = assembly.GetTypes().Where(t => Attribute.IsDefined(t, typeof(HttpController)));
+            //var temp = classesWithHttpController.FirstOrDefault(c => c.CustomAttributes.FirstOrDefault(atr => atr.AttributeType.Name == "HttpController"));
+            return controller == null ? null : controller;
+        }
+        private MethodInfo GetMethodByContext(HttpListenerContext context)
+        {
+            var controller = GetControllerByContext(context);
+            if (controller == null) return null;
+            var request = context.Request;
+            var methodURI = request.Url?.Segments[2].Replace("/", "");
             var methods = controller.GetMethods().Where(t => t.GetCustomAttributes(true)
-                                                              .Any(attr => attr.GetType().Name == $"Http{_httpContext.Request.HttpMethod}"));
-
-            string methodURI = strParams[0];
-            var method = methods.FirstOrDefault(x => _httpContext.Request.HttpMethod switch
+                                                              .Any(attr => attr.GetType().Name == $"Http{request.HttpMethod}"));
+            //можно лучше
+            var method = methods.FirstOrDefault(x => request.HttpMethod switch
             {
                 "GET" => x.GetCustomAttribute<HttpGET>()?.MethodURI == methodURI,
                 "POST" => x.GetCustomAttribute<HttpPOST>()?.MethodURI == methodURI
             });
-
-            if (method == null) return false;
-
-            object[] queryParams = null;
-
-            var methodParams = method.GetParameters();
-            
-
-            if (_httpContext.Request.HttpMethod == HttpReqests.GET.ToString() )
-            {
-                //GET
-                queryParams = strParams.Skip(1).Select(x => (object)x).ToArray();
-
-                //меняю тип
-                for (int i = 0; i < queryParams.Length; i++)
-                {
-                    queryParams[i] = Convert.ChangeType(queryParams[i], methodParams[i].ParameterType);
-                }
-
-                //тут чето делать
-
-                var result = method.Invoke(Activator.CreateInstance(controller), queryParams);
-
-                if (result != null && result is bool && (bool)result == false)
-                {
-                    
-                    Pages.Pages.Show404(ref response);
-                    Listening();
-                    return true;
-                }
-
-                response.ContentType = "Application/json";
-
-                byte[] buffer = Encoding.ASCII.GetBytes(JsonSerializer.Serialize(result));
-                response.ContentLength64 = buffer.Length;
-
-                Stream output = response.OutputStream;
-                output.Write(buffer, 0, buffer.Length);
-
-                output.Close();
-            }
-            else
-            {
-                //POST
-                queryParams = GetLoginAndPassword(request);
-
-                //меняю тип
-                for (int i = 0; i < queryParams.Length; i++)
-                {
-                    queryParams[i] = Convert.ChangeType(queryParams[i], methodParams[i].ParameterType);
-                }
-
-                var result = method.Invoke(Activator.CreateInstance(controller), queryParams);
-                if (result != null && result is bool && (bool)result == false)
-                {
-                    Pages.Pages.Show404(ref response);
-                    Listening();
-                    return true;
-                }
-                
-                //TODO
-                Pages.Pages.ShowHTMLPage(/*methodURI*/"profile",ref response);
-                //response.StatusCode = 201;
-                //response.ContentEncoding = Encoding.UTF8;
-
-                //string message = $"<h1>201<h1> <h2>{queryParams[0]} {queryParams[1]}<h2>";
-                //var buffer = Encoding.UTF8.GetBytes(message);
-
-                //Stream output = response.OutputStream;
-                //output.Write(buffer, 0, buffer.Length);
-
-                //output.Close();
-            }
-
-            Listening();
-
-            return true;
+            return method;
         }
-
-        //прием данных с полей логин и пароль (ретурнуть словарь) Колхоз
-        public string[] GetLoginAndPassword(HttpListenerRequest request)
-        {
-            if (!request.HasEntityBody)
-            {
-                Console.WriteLine("No client data was sent with the request.");
-                return null;
-            }
-            Stream body = request.InputStream;
-            Encoding encoding = request.ContentEncoding;
-
-            StreamReader reader = new StreamReader(body, encoding);
-            string s = reader.ReadToEnd();
-
-            body.Close();
-            reader.Close();
-
-            var charLogin = s.ToCharArray().Skip(6).TakeWhile(item => item != '&').ToArray();
-            string login = new string(charLogin).Replace("%40", "@");
-
-            var charPassword = s.SkipWhile(item => item != '&').Skip(10).ToArray();
-            string password = new string(charPassword);
-
-            string[] strParams = new string[] { login, password };
-
-            var dict = new Dictionary<string, string>
-            {
-                { "Login", login},
-                { "Password", password},
-            };
-            //TODO
-
-            return strParams;
-
-        }
-        private void Show404(ref HttpListenerResponse response)
-        {
-            response.Headers.Set("Content-Type", "text/html");
-            response.StatusCode = 404;
-            response.ContentEncoding = Encoding.UTF8;
-            string err = "<h1>404<h1> <h2>The resource can not be found.<h2>";
-            byte[] buffer = Encoding.UTF8.GetBytes(err);
-            Stream output = response.OutputStream;
-            output.Write(buffer, 0, buffer.Length);
-            //закрываем поток
-            output.Close();
-        }
-        private void ShowPage(HttpListenerContext _httpContext)
-        {
-            var response = _httpContext.Response;
-            try
-            {
-                response.Headers.Set("Content-Type", "text/html");
-                string[] strParams = _httpContext.Request.Url
-                                        .Segments
-                                        .Skip(2)
-                                        .Select(s => s.Replace("/", ""))
-                                        .ToArray();
-                string directory = strParams[0];
-                if (!Pages.Pages.ShowHTMLPage(directory, ref response))
-
-                    Show404(ref response);
-            }
-            catch
-            {
-                Show404(ref response);
-                Listening();
-            }
-            Listening();
-        }
-
         public void Dispose()
         {
             Stop();

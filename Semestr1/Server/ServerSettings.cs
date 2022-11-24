@@ -11,11 +11,11 @@ namespace Semestr1.Server
     {
         static public string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=AnimeDB;Integrated Security=True";
         public int Port { get; set; } = 8800;
-        public string SitePath { get; set; } = @"./site/";
+        public string SiteDirectory { get; set; } = @"site";
         public ServerSettings(int port, string path)
         {
             Port = port;
-            SitePath = path;
+            SiteDirectory = path;
         }
         public ServerSettings() { }
 

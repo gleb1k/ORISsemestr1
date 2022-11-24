@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пример заголовка сайта</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="common.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<div class="container">
+    <header class="header">
+        <h1>Mr. Camel</h1>
+        <div class="social">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+    </header>
+    <aside class="left">
+        <img src="/pageExample.jpeg" width="160px"  alt="Пример изображения"/>
+        <ul>
+            <li>Home</li>
+            <li>Career</li>
+            <li>Get weather</li>
+            <li>About</li>
+        </ul>
+        <br><br>
+        <p>"Do something important in life. I convert green grass to code."<br>- Mr Camel</p>
+    </aside>
+    <main class="content">
+        <h2>About Me</h2>
+        <p>I don't look like some handsome horse, but I am a real desert king. I can servive days without water.</p>
+        <h2>My Career</h2>
+        <p>I work as a web developer for a company that makes websites for camel businesses.</p>
+        <hr><br>
+        <h2>How Can I Help You?</h2>
+        <h3 id="temp"> Данные о погоде: температура - </h3>
+        <input type="button" id="getTemp" class="btn btn-success" value="Узнать погоду" /><br>
+        <table>
+            <tr>
+                <th>SKILL 1</th>
+                <th>SKILL 2</th>
+                <th>SKILL 3</th>
+            </tr>
+            <tr>
+                <td><i class="fas fa-broom"></i></td>
+                <td><i class="fas fa-archive"></i></td>
+                <td><i class="fas fa-trailer"></i></td>
+            </tr>
+            <tr>
+                <td>Cleaning kaktus in your backyard</td>
+                <td>Storing some fat for you</td>
+                <td>Taking you through the desert</td>
+            </tr>
+            <tr>
+        </table>
+        <div class="container">
+        <form id="userForm">
+            <label>Email:  <input type="text" id="email" name="email" class="form-control"></label><br>
+            <label>Mobile: <input type="text" id="mobile" name="mobile" class="form-control"></label><br>
+            <label>Comment:<textarea id="description" class="form-control" name="comments" placeholder="Расскажи о себе"></textarea></label><br>
+            <input type="button" id="sendForm" class="btn btn-success" value="Тык сюда" /><br>
+        </form>
+            <div id="resultMessage"></div>
+        </div>
+    </main>
+    <footer class="footer">&copy; Copyright Mr. Camel</footer>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    var resultMessage = $("#resultMessage");
+    var sendForm = $("#sendForm");
+    var userForm = $("#userForm");
+    sendForm.click(function () {
+        
+        var email = $("#email").val().trim();
+        var mobile = $("#mobile").val().trim();
+        var description = $("#description").val().trim();
+        
+        if(email === "" || mobile === "" || description === ""){
+
+            resultMessage.text("Не введены валидные данные");
+            return;
+        }
+        resultMessage.text("");
+        $.ajax({
+            url: '/user', 
+            type: 'POST', 
+            data: JSON.stringify({ 'email': email, 'mobile': mobile, 'description': description}),
+            contentType: 'application/json',
+            beforeSend: function (){
+                sendForm.prop('disabled',true);
+               } , 
+            success: function (data) {
+
+                resultMessage.text("Данные о пользователе сохранены. Его идентификатор: " + data);
+                userForm.trigger("reset");
+                
+                sendForm.prop('disabled',false);
+            }
+        });
+    });
+</script>
+<script>
+    $("#getTemp").click(function (){
+        $.ajax({
+            url: '/weather', 
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                if(data != null){
+                    $("#temp").text("Данные о погоде: температура - " +(data['main']['temp'] - 273.15).toFixed(2)).append(" градусов по цельсию")
+                }
+                else{
+                    $("#temp").text("Данные о погоде: Данные не найдены")
+                }
+            }
+        })
+    });
+</script>
+</body>
+</html>

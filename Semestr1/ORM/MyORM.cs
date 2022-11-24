@@ -57,6 +57,11 @@ namespace Semestr1.ORM
                     T obj = (T)Activator.CreateInstance(type);
                     type.GetProperties().ToList().ForEach(p =>
                     {
+                        if (reader[p.Name] is DBNull)
+                        {
+                            p.SetValue(obj, null);
+                            return;
+                        }
                         p.SetValue(obj, reader[p.Name]);
                     });
                     list.Add(obj);
@@ -76,158 +81,164 @@ namespace Semestr1.ORM
             }
             return result;
         }
-        /// <summary>
-        /// Select * from table
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public IEnumerable<T> Select<T>()
-        {
-            IList<T> list = new List<T>();
-            Type t = typeof(T);
-
-            using (_connection)
-            {
-                //НУЖНО ЧТОБ ТАБЛИЦА НАЗЫВАЛАСЬ Accounts, Users, Cars ... (иначе не робит)
-                string sqlExpression = $"SELECT * FROM {t.Name}s";
-
-                _cmd.CommandText = sqlExpression;
-
-                _connection.Open();
-                var reader = _cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    T obj = (T)Activator.CreateInstance(t);
-                    var temp = t.GetProperties().ToList();
 
 
-                    //Не работает тк NULLABLE INT
-                    //var tdsf = temp[2].PropertyType;
 
-                    //var tdsf3 = temp[2].PropertyType.Name;
-                    ////Convert.ChangeType(queryParams[i], methodParams[i].ParameterType)
-                    //for (int i=0; i<temp.Count; i++)
-                    //{
-                    //    if (temp[i].PropertyType.Equals(tdsf))
-                    //    {
+        #region useless
 
-                    //        t = Nullable.GetUnderlyingType(t);
-                    //        var temp2 = Convert.ChangeType(temp[i], t);
-                    //    }
-                    //}
-                    temp.ForEach(x =>
-                    x.SetValue(obj,Convert.ChangeType(reader[x.Name], x.PropertyType)));
+        ///// <summary>
+        ///// Select * from table
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <returns></returns>
+        //public IEnumerable<T> Select<T>()
+        //{
+        //    IList<T> list = new List<T>();
+        //    Type t = typeof(T);
 
-                    list.Add(obj);
-                }
-            }
-            return list;
-        }
-        /// <summary>
-        /// Inserts values into table
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        public void Insert<T>(T entity)
-        {
-            Type t = typeof(T);
-            var args = t.GetProperties();
+        //    using (_connection)
+        //    {
+        //        //НУЖНО ЧТОБ ТАБЛИЦА НАЗЫВАЛАСЬ Accounts, Users, Cars ... (иначе не робит)
+        //        string sqlExpression = $"SELECT * FROM {t.Name}s";
 
-            var values = args.Select(value => $"@{value.GetValue(entity)}").ToArray();
+        //        _cmd.CommandText = sqlExpression;
 
-            var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
-            var argsWithoutDog = args.Select(x => x.Name).ToArray();
+        //        _connection.Open();
+        //        var reader = _cmd.ExecuteReader();
+        //        while (reader.Read())
+        //        {
+        //            T obj = (T)Activator.CreateInstance(t);
+        //            var temp = t.GetProperties().ToList();
 
-            foreach (var parameter in args)
-            {
-                var sqlParameter = new SqlParameter($"@{parameter.Name}", parameter.GetValue(entity));
-                _cmd.Parameters.Add(sqlParameter);
-            }
 
-            string nonQuery = $"SET IDENTITY_INSERT {t.Name}s ON " +
-            $"INSERT INTO {t.Name}s ({string.Join(", ", argsWithoutDog)}) VALUES ({string.Join(", ", argsWithDog)}) " +
-            $"SET IDENTITY_INSERT {t.Name}s OFF";
+        //            //Не работает тк NULLABLE INT
+        //            //var tdsf = temp[2].PropertyType;
 
-            ExecuteNonQuery(nonQuery);
-        }
-        //todo
-        /// <summary>
-        /// Updating field by VALUES. ID doesn't matter!
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        public void Update<T>(T entity)
-        {
-            Type t = typeof(T);
-            var args = t.GetProperties();
+        //            //var tdsf3 = temp[2].PropertyType.Name;
+        //            ////Convert.ChangeType(queryParams[i], methodParams[i].ParameterType)
+        //            //for (int i=0; i<temp.Count; i++)
+        //            //{
+        //            //    if (temp[i].PropertyType.Equals(tdsf))
+        //            //    {
 
-            var values = args.Select(value => $"@{value.GetValue(entity)}").ToArray();
+        //            //        t = Nullable.GetUnderlyingType(t);
+        //            //        var temp2 = Convert.ChangeType(temp[i], t);
+        //            //    }
+        //            //}
+        //            temp.ForEach(x =>
+        //            x.SetValue(obj,Convert.ChangeType(reader[x.Name], x.PropertyType)));
 
-            var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
-            var argsWithoutDog = args.Select(x => x.Name).ToArray();
+        //            list.Add(obj);
+        //        }
+        //    }
+        //    return list;
+        //}
+        ///// <summary>
+        ///// Inserts values into table
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="entity"></param>
+        //public void Insert<T>(T entity)
+        //{
+        //    Type t = typeof(T);
+        //    var args = t.GetProperties();
 
-            foreach (var parameter in args)
-            {
-                var sqlParameter = new SqlParameter($"@{parameter.Name}", parameter.GetValue(entity));
-                _cmd.Parameters.Add(sqlParameter);
-            }
-            //Row = @Value. without ID
-            string setQuery = "";
-            for (int i = 1; i < args.Length; i++)
-            {
-                setQuery += $"{argsWithoutDog[i]}={argsWithDog[i]}, ";
-            }
-            setQuery = setQuery.Remove(setQuery.Length - 2, 2);
+        //    var values = args.Select(value => $"@{value.GetValue(entity)}").ToArray();
 
-            string nonQuery = $"UPDATE {t.Name}s SET {setQuery} " +
-                $"FROM " +
-                $"(SELECT * FROM {t.Name}s WHERE Id={argsWithDog[0]}) AS Selected " +
-                $"WHERE {t.Name}s.Id = Selected.Id";
+        //    var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
+        //    var argsWithoutDog = args.Select(x => x.Name).ToArray();
 
-            ExecuteNonQuery(nonQuery);
-        }
-        /// <summary>
-        /// Deleting entity by ID
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        public void Delete<T>(T entity)
-        {
-            Type t = typeof(T);
-            var args = t.GetProperties();
+        //    foreach (var parameter in args)
+        //    {
+        //        var sqlParameter = new SqlParameter($"@{parameter.Name}", parameter.GetValue(entity));
+        //        _cmd.Parameters.Add(sqlParameter);
+        //    }
 
-            var values = args.Select(value => $"@{value.GetValue(entity)}").ToArray();
+        //    string nonQuery = $"SET IDENTITY_INSERT {t.Name}s ON " +
+        //    $"INSERT INTO {t.Name}s ({string.Join(", ", argsWithoutDog)}) VALUES ({string.Join(", ", argsWithDog)}) " +
+        //    $"SET IDENTITY_INSERT {t.Name}s OFF";
 
-            var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
-            var argsWithoutDog = args.Select(x => x.Name).ToArray();
+        //    ExecuteNonQuery(nonQuery);
+        //}
+        ////todo
+        ///// <summary>
+        ///// Updating field by VALUES. ID doesn't matter!
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="entity"></param>
+        //public void Update<T>(T entity)
+        //{
+        //    Type t = typeof(T);
+        //    var args = t.GetProperties();
 
-            foreach (var parameter in args)
-            {
-                var sqlParameter = new SqlParameter($"@{parameter.Name}", parameter.GetValue(entity));
-                _cmd.Parameters.Add(sqlParameter);
-            }
+        //    var values = args.Select(value => $"@{value.GetValue(entity)}").ToArray();
 
-            string nonQuery = $"DELETE FROM {t.Name}s " +
-                $"WHERE {argsWithoutDog[0]}={argsWithDog[0]}";
+        //    var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
+        //    var argsWithoutDog = args.Select(x => x.Name).ToArray();
 
-            ExecuteNonQuery(nonQuery);
-        }
-        /// <summary>
-        /// Checking existence of entity by id
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public bool IsExistById<T>(int id)
-        {
-            Type t = typeof(T);
-            string nonQuery = $"Select * from {t.Name}s " +
-                $"WHERE Id={id}";
-            if (ExecuteNonQuery(nonQuery) > 0)
-            {
-                return true;
-            }
-            else return false;
-        }
+        //    foreach (var parameter in args)
+        //    {
+        //        var sqlParameter = new SqlParameter($"@{parameter.Name}", parameter.GetValue(entity));
+        //        _cmd.Parameters.Add(sqlParameter);
+        //    }
+        //    //Row = @Value. without ID
+        //    string setQuery = "";
+        //    for (int i = 1; i < args.Length; i++)
+        //    {
+        //        setQuery += $"{argsWithoutDog[i]}={argsWithDog[i]}, ";
+        //    }
+        //    setQuery = setQuery.Remove(setQuery.Length - 2, 2);
+
+        //    string nonQuery = $"UPDATE {t.Name}s SET {setQuery} " +
+        //        $"FROM " +
+        //        $"(SELECT * FROM {t.Name}s WHERE Id={argsWithDog[0]}) AS Selected " +
+        //        $"WHERE {t.Name}s.Id = Selected.Id";
+
+        //    ExecuteNonQuery(nonQuery);
+        //}
+        ///// <summary>
+        ///// Deleting entity by ID
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="entity"></param>
+        //public void Delete<T>(T entity)
+        //{
+        //    Type t = typeof(T);
+        //    var args = t.GetProperties();
+
+        //    var values = args.Select(value => $"@{value.GetValue(entity)}").ToArray();
+
+        //    var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
+        //    var argsWithoutDog = args.Select(x => x.Name).ToArray();
+
+        //    foreach (var parameter in args)
+        //    {
+        //        var sqlParameter = new SqlParameter($"@{parameter.Name}", parameter.GetValue(entity));
+        //        _cmd.Parameters.Add(sqlParameter);
+        //    }
+
+        //    string nonQuery = $"DELETE FROM {t.Name}s " +
+        //        $"WHERE {argsWithoutDog[0]}={argsWithDog[0]}";
+
+        //    ExecuteNonQuery(nonQuery);
+        //}
+        ///// <summary>
+        ///// Checking existence of entity by id
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="entity"></param>
+        ///// <returns></returns>
+        //public bool IsExistById<T>(int id)
+        //{
+        //    Type t = typeof(T);
+        //    string nonQuery = $"Select * from {t.Name}s " +
+        //        $"WHERE Id={id}";
+        //    if (ExecuteNonQuery(nonQuery) > 0)
+        //    {
+        //        return true;
+        //    }
+        //    else return false;
+        #endregion
     }
 }
+
