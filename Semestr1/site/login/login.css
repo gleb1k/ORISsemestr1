@@ -22,10 +22,10 @@ label {
     margin-bottom: 5px
 }
 
-    label i {
-        color: #999;
-        font-size: 80%;
-    }
+label i {
+    color: #999;
+    font-size: 80%;
+}
 
 input:not([id="register"]), select {
     border: 1px solid #ccc;
@@ -46,11 +46,11 @@ input:not([id="register"]), select {
     border-radius: 2px;
 }
 
-    .form-inline label, .form-inline input {
-        display: inline-block;
-        width: auto;
-        padding-right: 15px;
-    }
+.form-inline label, .form-inline input {
+    display: inline-block;
+    width: auto;
+    padding-right: 15px;
+}
 
 .error {
     color: red;

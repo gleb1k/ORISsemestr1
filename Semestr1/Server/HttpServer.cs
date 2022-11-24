@@ -20,6 +20,7 @@ namespace Semestr1.Server
 
         private ServerSettings _serverSettings;
         private readonly HttpListener _httpListener;
+
         public HttpServer()
         {
             _serverSettings = ServerSettings.Deserialize();
@@ -47,6 +48,7 @@ namespace Semestr1.Server
 
             Listening();
         }
+
         public void Stop()
         {
             if (Status == ServerStatus.Start)
@@ -86,12 +88,13 @@ namespace Semestr1.Server
                         Console.WriteLine(ex.ToString());
                         response.StatusCode = 500;
                     }
+
                     response.OutputStream.Close();
                     response.Close();
                 });
             }
-
         }
+
         private Type? GetControllerByContext(HttpListenerContext context)
         {
             var request = context.Request;
@@ -101,13 +104,15 @@ namespace Semestr1.Server
             var assembly = Assembly.GetExecutingAssembly();
 
             // ищет контроллер ПО НАЗВАНИЮ КЛАССА. Т.Е НАЗВАНИЕ КЛАССА ДОЛЖНО БЫТЬ РАВНО НАЗВАНИЮ СТРОКИ ПЕРЕДАННОЙ В АТРИБУТ!
-            var controller = assembly.GetTypes().Where(t => Attribute.IsDefined(t, typeof(HttpController))).FirstOrDefault(c => c.Name.ToLower() == controllerName.ToLower());
+            var controller = assembly.GetTypes().Where(t => Attribute.IsDefined(t, typeof(HttpController)))
+                .FirstOrDefault(c => c.Name.ToLower() == controllerName.ToLower());
 
             //попытка сделать адекватно
             //var classesWithHttpController = assembly.GetTypes().Where(t => Attribute.IsDefined(t, typeof(HttpController)));
             //var temp = classesWithHttpController.FirstOrDefault(c => c.CustomAttributes.FirstOrDefault(atr => atr.AttributeType.Name == "HttpController"));
             return controller == null ? null : controller;
         }
+
         private MethodInfo GetMethodByContext(HttpListenerContext context)
         {
             var controller = GetControllerByContext(context);
@@ -115,7 +120,7 @@ namespace Semestr1.Server
             var request = context.Request;
             var methodURI = request.Url?.Segments[2].Replace("/", "");
             var methods = controller.GetMethods().Where(t => t.GetCustomAttributes(true)
-                                                              .Any(attr => attr.GetType().Name == $"Http{request.HttpMethod}"));
+                .Any(attr => attr.GetType().Name == $"Http{request.HttpMethod}"));
             //можно лучше
             var method = methods.FirstOrDefault(x => request.HttpMethod switch
             {
@@ -124,6 +129,7 @@ namespace Semestr1.Server
             });
             return method;
         }
+
         public void Dispose()
         {
             Stop();

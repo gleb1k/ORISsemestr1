@@ -18,17 +18,18 @@ namespace Semestr1.Contollers
             await context.ServerPage(@"\home\home.html");
         }
 
-        [HttpGET("register")] 
+        [HttpGET("register")]
         public static async Task ShowRegister(HttpListenerContext context)
         {
             await context.ServerPage(@"\register\register.html");
         }
 
-        [HttpGET("login")] 
+        [HttpGET("login")]
         public static async Task ShowLogin(HttpListenerContext context)
         {
             await context.ServerPage(@"\login\login.html");
         }
+
         [HttpGET("profile")]
         public static async Task ShowProfile(HttpListenerContext context)
         {

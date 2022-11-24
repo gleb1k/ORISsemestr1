@@ -9,24 +9,25 @@
     <script type="text/javascript" src="/register/register.js"></script>
 </head>
 <body>
-    <a href="http://localhost:8800/anime/home">На главную</a>
+<a href="http://localhost:8800/anime/home">На главную</a>
 
-    <form class="sign-in-form test" name="registration_form" method="post" action="http://localhost:8800/users/registerPOST" onsubmit="return validateForm()">
+<form class="sign-in-form test" name="registration_form" method="post" action="http://localhost:8800/users/registerPOST"
+      onsubmit="return validateForm()">
 
-        <h1>Регистрация</h1>
-        <div class="login_field row">
-            <label class="sign-in-form__label">Email</label>
-            <input id="login" class="edit" type="text" placeholder="Введите e-mail" name="Login">
-            <div class="error" id="loginErr"></div>
-        </div>
-        <div class="password_field row">
-            <label class="sign-in-form__label">Password</label>
-            <input id="pass" class="edit" type="password" placeholder="Введите пароль" name="Password">
-            <div class="error" id="passErr"></div>
-        </div>
-        <div class="enter_btn_container">
-            <button class="enter_btn bad_submit" type="submit">Зарегестрироваться</button>
-        </div>
-    </form>
+    <h1>Регистрация</h1>
+    <div class="login_field row">
+        <label class="sign-in-form__label">Email</label>
+        <input id="login" class="edit" type="text" placeholder="Введите e-mail" name="Login">
+        <div class="error" id="loginErr"></div>
+    </div>
+    <div class="password_field row">
+        <label class="sign-in-form__label">Password</label>
+        <input id="pass" class="edit" type="password" placeholder="Введите пароль" name="Password">
+        <div class="error" id="passErr"></div>
+    </div>
+    <div class="enter_btn_container">
+        <button class="enter_btn bad_submit" type="submit">Зарегестрироваться</button>
+    </div>
+</form>
 </body>
 </html>

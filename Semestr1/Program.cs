@@ -4,10 +4,10 @@ using Semestr1.Server;
 using Semestr1.Contollers;
 using Semestr1.Attributes;
 
-var myorm = new MyORM(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=AnimeDB;Integrated Security=True");
+var myorm = new MyORM(ServerSettings._connectionString);
 //var anime = new Anime(1, "animeTest", "huysuy", "anime super good", "");
 //var temp = myorm.ExectureScalar<User>(new User(1,"login","password",13,"8983834834",1));
-//var list = myorm.ExectureScalar<User>("select * from Users");
+var list = myorm.ExectureScalar<User>("select * from users");
 //myorm.Insert<User>(new User(343, "loginnew", "passwordnew","18", "8987858594", "boku no pico"));
 var temp = new User(343, "loginnew", "passwordnew", null, "8987858594", null);
 

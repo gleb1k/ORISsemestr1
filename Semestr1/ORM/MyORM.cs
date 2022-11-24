@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using Npgsql;
 
 namespace Semestr1.ORM
 {
@@ -16,7 +17,7 @@ namespace Semestr1.ORM
 
         public MyORM(string connectionString)
         {
-            _connection = new SqlConnection(connectionString);
+            _connection = new NpgsqlConnection(connectionString);
             _cmd = _connection.CreateCommand();
         }
         //Колво строк

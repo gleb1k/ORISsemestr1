@@ -9,15 +9,21 @@ namespace Semestr1.Server
 {
     public class ServerSettings
     {
-        static public string _connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=AnimeDB;Integrated Security=True";
+        static public string _connectionString =
+            @"Host=localhost;Username=postgres;Password=12345678;Database=AnimeDB";
+
         public int Port { get; set; } = 8800;
         public string SiteDirectory { get; set; } = @"site";
+
         public ServerSettings(int port, string path)
         {
             Port = port;
             SiteDirectory = path;
         }
-        public ServerSettings() { }
+
+        public ServerSettings()
+        {
+        }
 
         public void Serialize()
         {
@@ -31,6 +37,7 @@ namespace Semestr1.Server
                 streamWriter.WriteLine(jsonString);
             }
         }
+
         public static ServerSettings Deserialize()
         {
             //json deserialization

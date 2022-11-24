@@ -52,6 +52,7 @@ namespace Semestr1.Contollers
                     return;
                 }
             }
+
             context.Response.StatusCode = 500;
             context.Response.ContentType = "text/plain; charset=utf-8";
             context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
@@ -66,13 +67,14 @@ namespace Semestr1.Contollers
             {
                 //должно быть асинхронно, но тяжело
                 var result = UserDAO.Login(dict["Login"], dict["Password"]);
-                if (result!=null)
+                if (result != null)
                 {
                     context.Response.StatusCode = 204;
                     await context.ServerPage(@"\profile\profile.html");
                     return;
                 }
             }
+
             context.Response.StatusCode = 500;
             context.Response.ContentType = "text/plain; charset=utf-8";
             context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
@@ -90,6 +92,7 @@ namespace Semestr1.Contollers
             {
                 return null;
             }
+
             Stream body = request.InputStream;
             Encoding encoding = request.ContentEncoding;
             StreamReader reader = new StreamReader(body, encoding);

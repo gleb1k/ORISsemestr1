@@ -1,6 +1,7 @@
 function changeColorRed(element) {
     element.style.border = "2px solid red";
 }
+
 function changeColorGreen(element) {
     element.style.border = "2px solid green";
 }
@@ -32,19 +33,19 @@ function validateForm() {
     }
 
     if (password == "") {
-            printError("passErr", "Пожалуйста, введите Пароль");
+        printError("passErr", "Пожалуйста, введите Пароль");
+        changeColorRed(document.getElementById("pass"))
+    } else {
+        var regex = /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+        if (regex.test(password) === false) {
+            printError("passErr", "Строчные и прописные латинские буквы, цифры, спецсимволы. Минимум 8 символов");
             changeColorRed(document.getElementById("pass"))
         } else {
-            var regex = /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
-            if (regex.test(password) === false) {
-                printError("passErr", "Строчные и прописные латинские буквы, цифры, спецсимволы. Минимум 8 символов");
-                changeColorRed(document.getElementById("pass"))
-            } else {
-                printError("passErr", "");
-                changeColorGreen(document.getElementById("pass"))
-                passErr = false;
-            }
+            printError("passErr", "");
+            changeColorGreen(document.getElementById("pass"))
+            passErr = false;
         }
+    }
 
     if ((loginErr || passErr) == true) {
         return false;

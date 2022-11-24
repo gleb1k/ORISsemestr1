@@ -11,6 +11,7 @@ namespace Semestr1.ORM
     public class AnimeDAO
     {
         private static readonly string connectionString = ServerSettings._connectionString;
+
         public static bool AddAnime(Anime anime)
         {
             if (!CheckExistenceById(anime.Id))
@@ -18,13 +19,13 @@ namespace Semestr1.ORM
 
             var myORM = new MyORM(connectionString);
             string nonQuery = $"insert into Animes (Id,Name,Author, Description) " +
-                $"VALUES " +
-                $"(" +
-                $"'{anime.Id}'," +
-                $"'{anime.Name},'" +
-                $"'{anime.Author}," +
-                $"'{anime.Description}" +
-                $")";
+                              $"VALUES " +
+                              $"(" +
+                              $"'{anime.Id}'," +
+                              $"'{anime.Name},'" +
+                              $"'{anime.Author}," +
+                              $"'{anime.Description}" +
+                              $")";
             myORM.ExecuteNonQuery(nonQuery);
 
             return true;
@@ -41,6 +42,7 @@ namespace Semestr1.ORM
             myORM.ExecuteNonQuery(nonQuery);
             return true;
         }
+
         private static bool CheckExistenceById(int id)
         {
             var myORM = new MyORM(connectionString);
