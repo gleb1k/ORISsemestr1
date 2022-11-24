@@ -18,11 +18,6 @@ namespace Semestr1.Contollers
     [HttpController("users")]
     public class Users
     {
-        //[HttpGET("getuser")]
-        //public User GetUser(int id)
-        //{
-        //    return rep.GetById(id);
-        //}
         [HttpGET("getuser")]
         public static User GetUser(HttpListenerContext context)
         {
@@ -83,7 +78,11 @@ namespace Semestr1.Contollers
             context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
         }
 
-        //todo сделать чтение всего body
+        /// <summary>
+        /// parcing data from request to dict
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         private static Dictionary<string, string> GetBodyData(HttpListenerContext context)
         {
             var request = context.Request;

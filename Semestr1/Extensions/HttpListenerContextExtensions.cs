@@ -15,6 +15,8 @@ namespace Semestr1.Extensions
 
         public static async Task ServerPage(this HttpListenerContext context, string path)
         {
+            if (path == "/")
+                path = "/home/home.html";
             var fullPath = Path.Join(PublicFolderPath, path);
             if (!File.Exists(fullPath))
             {
