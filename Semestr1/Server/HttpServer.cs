@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Semestr1.Attributes;
+﻿using Semestr1.Attributes;
 using Semestr1.Extensions;
 using System;
 using System.Collections.Generic;
@@ -103,13 +102,16 @@ namespace Semestr1.Server
             string controllerName = context.Request.Url.Segments[1].Replace("/", "");
             var assembly = Assembly.GetExecutingAssembly();
 
-            // ищет контроллер ПО НАЗВАНИЮ КЛАССА. Т.Е НАЗВАНИЕ КЛАССА ДОЛЖНО БЫТЬ РАВНО НАЗВАНИЮ СТРОКИ ПЕРЕДАННОЙ В АТРИБУТ!
+            // ищет контроллер ПО НАЗВАНИЮ КЛАССА. Т.Е НАЗВАНИЕ КЛАССА ДОЛЖНО БЫТЬ РАВНО НАЗВАНИЮ СТРОКИ ПЕРЕДАННОЙ В АТРИБУТ! говно
             var controller = assembly.GetTypes().Where(t => Attribute.IsDefined(t, typeof(HttpController)))
                 .FirstOrDefault(c => c.Name.ToLower() == controllerName.ToLower());
 
             //попытка сделать адекватно
             //var classesWithHttpController = assembly.GetTypes().Where(t => Attribute.IsDefined(t, typeof(HttpController)));
             //var temp = classesWithHttpController.FirstOrDefault(c => c.CustomAttributes.FirstOrDefault(atr => atr.AttributeType.Name == "HttpController"));
+            
+            // var classesWithHttpController = assembly.GetTypes().Where(t => Attribute.IsDefined(t, typeof(HttpController)));
+            // var temp = classesWithHttpController.FirstOrDefault(c => c.CustomAttributes.FirstOrDefault(atr => atr. == ""));
             return controller == null ? null : controller;
         }
 

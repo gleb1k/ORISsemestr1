@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Semestr1.Contollers;
+﻿using Semestr1.Contollers;
 using Semestr1.Models;
 using Semestr1.Server;
 using System;
@@ -14,6 +13,7 @@ namespace Semestr1.ORM
     public class UserDAO
     {
         private static readonly string connectionString = ServerSettings._connectionString;
+
         public static User AddUser(string login, string password)
         {
             if (CheckExistenceByLogin(login))
@@ -21,42 +21,38 @@ namespace Semestr1.ORM
 
             var myORM = new MyORM(connectionString);
             string nonQuery = $"insert into Users (Login, Password) " +
-                $"values ('{login}','{password}')";
+                              $"values ('{login}','{password}')";
             myORM.ExecuteNonQuery(nonQuery);
 
             return GetByLogin(login);
         }
-        public static User Login(string login, string password)
+
+        public static User GetUser(string login, string password)
         {
             if (!CheckExistenceByLogin(login))
                 return null;
 
-            var myORM = new MyORM(connectionString);
+            var dbUser = GetByLogin(login);
+            return dbUser.Password == password ? dbUser : null;
+        }
 
-            string query = $"SELECT * FROM Users where (Login='{login}' and Password='{password}')";
-            myORM.ExecuteQuery<User>(query).FirstOrDefault();
-            var temp = GetByLogin(login);
-            return GetByLogin(login);
-        }
-        /// <summary>
-        /// </summary>
-        /// <param name="login"></param>
-        /// <returns>
-        /// true -> exist
-        /// false -> doesn't exist
-        /// </returns>
-        private static bool CheckExistenceByLogin(string login)
+        //todo
+        public static User UpdateUser(int userId, int age, string mobile)
         {
+            if (!CheckExistenceById(userId))
+                return null;
+
+            string nonQuery = $"Update Users " +
+                              $"Set age='{age}'," +
+                              $"mobile='{mobile}' " +
+                              $"from (select * from Users where id = {userId}) as Selected " +
+                              $"where users.id = Selected.id";
+
             var myORM = new MyORM(connectionString);
-            string nonQuery = $"select count(*) from Users where Login='{login}'";
-            return myORM.ExectureScalar<int>(nonQuery) > 0;
+            myORM.ExecuteNonQuery(nonQuery);
+            return GetById(userId);
         }
-        private static bool CheckExistenceById(int id)
-        {
-            var myORM = new MyORM(connectionString);
-            string nonQuery = $"select count(*) from Users where Id='{id}'";
-            return myORM.ExectureScalar<int>(nonQuery) > 0;
-        }
+
         public static bool Delete(User user)
         {
             if (!CheckExistenceByLogin(user.Login))
@@ -68,6 +64,7 @@ namespace Semestr1.ORM
             myORM.ExecuteNonQuery(nonQuery);
             return true;
         }
+
         public static User GetById(int id)
         {
             if (!CheckExistenceById(id))
@@ -78,7 +75,8 @@ namespace Semestr1.ORM
 
             return myORM.ExecuteQuery<User>(query).FirstOrDefault();
         }
-        public static User GetByLogin(string login)
+
+        private static User GetByLogin(string login)
         {
             if (!CheckExistenceByLogin(login))
                 return null;
@@ -88,23 +86,28 @@ namespace Semestr1.ORM
 
             return myORM.ExecuteQuery<User>(query).FirstOrDefault();
         }
-        //todo
-        public static User Update(User user)
+
+        /// <summary>
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns>
+        /// true -> exist
+        /// false -> doesn't exist
+        /// </returns>
+        private static bool CheckExistenceByLogin(string login)
         {
-            //if (!CheckExistenceByLigin(user.Login))
-            //    return false;
-
-            //string nonQuery = $"UPDATE Users SET  " +
-            //    $"FROM " +
-            //    $"(SELECT * FROM Users WHERE Login='{user.Login}') AS Selected " +
-            //    $"WHERE Users.Login = Selected.Login";
-
-            //myORM.ExecuteNonQuery(nonQuery);
-
-            //todo
-            return null;
+            var myORM = new MyORM(connectionString);
+            string nonQuery = $"select count(*) from Users where Login='{login}'";
+            var temp = myORM.CountRows(nonQuery);
+            return temp > 0;
         }
 
-
+        private static bool CheckExistenceById(int id)
+        {
+            var myORM = new MyORM(connectionString);
+            string nonQuery = $"select count(*) from Users where Id='{id}'";
+            var temp = myORM.CountRows(nonQuery);
+            return temp > 0;
+        }
     }
 }

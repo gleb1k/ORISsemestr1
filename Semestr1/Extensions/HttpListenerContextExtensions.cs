@@ -17,6 +17,7 @@ namespace Semestr1.Extensions
         {
             if (path == "/")
                 path = "/home/home.html";
+
             var fullPath = Path.Join(PublicFolderPath, path);
             if (!File.Exists(fullPath))
             {
@@ -40,11 +41,13 @@ namespace Semestr1.Extensions
                 await context.Response.OutputStream.WriteAsync(file);
             }
         }
+
         public static async Task Show404(this HttpListenerContext context)
         {
             context.Response.ContentType = "text/html; charset=utf-8";
             context.Response.StatusCode = 404;
-            await context.Response.OutputStream.WriteAsync(Encoding.UTF8.GetBytes("<h2>404<h2><h3>The resource can not be found :c<h3>"));
+            await context.Response.OutputStream.WriteAsync(
+                Encoding.UTF8.GetBytes("<h2>404<h2><h3>The resource can not be found :c<h3>"));
         }
     }
 }

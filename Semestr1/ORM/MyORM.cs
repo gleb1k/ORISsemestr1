@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -12,36 +11,41 @@ namespace Semestr1.ORM
 {
     public class MyORM
     {
-        public IDbConnection _connection = null;
-        public IDbCommand _cmd = null;
+        private NpgsqlConnection _connection = null;
+        private NpgsqlCommand _cmd = null;
 
         public MyORM(string connectionString)
         {
             _connection = new NpgsqlConnection(connectionString);
             _cmd = _connection.CreateCommand();
         }
+
         //Колво строк
         public int ExecuteNonQuery(string query)
         {
             int noOfAffectedRows = 0;
             using (_connection)
             {
-                
                 _cmd!.CommandText = query;
                 _connection!.Open();
                 noOfAffectedRows = _cmd.ExecuteNonQuery();
             }
+
             return noOfAffectedRows;
         }
+
         //Добавить параметры
         public MyORM AddParameter<T>(string name, T value)
         {
-            SqlParameter param = new SqlParameter();
-            param.ParameterName = name;
-            param.Value = value;
+            NpgsqlParameter param = new NpgsqlParameter
+            {
+                ParameterName = name,
+                Value = value
+            };
             _cmd!.Parameters.Add(param);
             return this;
         }
+
         //Много штук
         public IEnumerable<T> ExecuteQuery<T>(string query)
         {
@@ -63,13 +67,16 @@ namespace Semestr1.ORM
                             p.SetValue(obj, null);
                             return;
                         }
+
                         p.SetValue(obj, reader[p.Name]);
                     });
                     list.Add(obj);
                 }
             }
+
             return list;
         }
+
         //Первый столбец первой попавшей строки
         public T ExectureScalar<T>(string query)
         {
@@ -78,13 +85,25 @@ namespace Semestr1.ORM
             {
                 _cmd.CommandText = query;
                 _connection.Open();
+                // if (T is )
+                //     //todo
                 result = (T)_cmd.ExecuteScalar();
             }
+
             return result;
         }
 
+        public long CountRows(string query)
+        {
+            using (_connection)
+            {
+                _cmd.CommandText = query;
+                _connection.Open();
 
-
+                return (long)_cmd.ExecuteScalar();
+            }
+        }
+        
         #region useless
 
         ///// <summary>
@@ -239,7 +258,7 @@ namespace Semestr1.ORM
         //        return true;
         //    }
         //    else return false;
+
         #endregion
     }
 }
-
