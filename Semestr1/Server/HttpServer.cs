@@ -79,7 +79,7 @@ namespace Semestr1.Server
                         else
                         {
                             var temp = context.Request.Url.LocalPath;
-                            await context.ServerPage(context.Request.Url.LocalPath);
+                            await context.ShowPage(context.Request.Url.LocalPath);
                         }
                     }
                     catch (Exception ex)

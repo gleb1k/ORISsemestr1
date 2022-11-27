@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Semestr1.Models
 {
-    public class User : EntityBase
+    public class UserModel : EntityBase
     {
         public string Login { get; set; }
         public string Password { get; set; }
@@ -14,9 +14,9 @@ namespace Semestr1.Models
         public string Mobile { get; set; }
         public int? FavoriteAnimeId { get; set; }
 
-        public User() { }
+        public UserModel() { }
 
-        public User(int id, string login, string password, int? age, string mobile, int? favoriteAnime)
+        public UserModel(int id, string login, string password, int? age, string mobile, int? favoriteAnime)
         {
             Id = id;
             Login = login;

@@ -8,25 +8,40 @@ public static class ScribanMethods
     private const string PublicFolder = "site";
     private static readonly string PublicFolderPath = Path.Join(Directory.GetCurrentDirectory(), PublicFolder);
     
-    //var encoded = HttpUtility.HtmlEncode(unencoded);
-    public static string GenerateProfile(string path, User user)
+    public static async Task GenerateProfilePage(string path, UserModel userModel)
     {
         var fullPath = Path.Join(PublicFolderPath, path);
         if (File.Exists(fullPath))
         {
-            string html = File.ReadAllText(fullPath);
+            string html = await File.ReadAllTextAsync(fullPath);
 
             // Parse a scriban template
             var template = Template.Parse(html);
-            var result = template.Render(user); 
+            var result = template.RenderAsync(userModel); 
             
-            var pathToHtml = Path.Join(PublicFolderPath, "/profile/profile.html");
-            File.WriteAllText(pathToHtml, result);
-            return result;
+            await File.WriteAllTextAsync(fullPath, result.Result);
         }
         else
         {
-            return "File doesn't found";
+            await File.WriteAllTextAsync(fullPath, "File doesn't found");
+        }
+    }
+    public static async Task GenerateHomePage(string path, List<AnimeModel> animeList)
+    {
+        var fullPath = Path.Join(PublicFolderPath, path);
+        if (File.Exists(fullPath))
+        {
+            string html = await File.ReadAllTextAsync(fullPath);
+
+            // Parse a scriban template
+            var template = Template.Parse(html);
+            var result = template.RenderAsync(new { Animes = animeList }); 
+            
+            await File.WriteAllTextAsync(fullPath, result.Result);
+        }
+        else
+        {
+            await File.WriteAllTextAsync(fullPath, "File doesn't found");
         }
     }
 }

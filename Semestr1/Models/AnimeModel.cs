@@ -6,21 +6,27 @@ using System.Threading.Tasks;
 
 namespace Semestr1.Models
 {
-    public class Anime : EntityBase
+    public class AnimeModel : EntityBase
     {
         public string Name { get; set; }
         public string Author { get; set; }
+
         public string Description { get; set; }
+
         //УРЛ картинки
-        public string Url { get; set; }
-        public Anime(int id, string name, string author, string description, string url)
+        public string ImageUrl { get; set; }
+
+        public AnimeModel(int id, string name, string author, string description, string imageUrl)
         {
             Id = id;
             Name = name;
             Author = author;
             Description = description;
-            Url = url;
+            ImageUrl = imageUrl;
         }
-        public Anime() { }
+
+        public AnimeModel()
+        {
+        }
     }
 }

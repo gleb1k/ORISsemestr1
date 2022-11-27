@@ -10,44 +10,79 @@ namespace Semestr1.ORM
 {
     public class AnimeDAO
     {
-        private static readonly string connectionString = ServerSettings._connectionString;
+        private static readonly string ConnectionString = ServerSettings._connectionString;
 
-        public static bool AddAnime(Anime anime)
+        public static AnimeModel? Add(string name, string author, string description)
         {
-            if (!CheckExistenceById(anime.Id))
-                return false;
-
-            var myORM = new MyORM(connectionString);
-            string nonQuery = $"insert into Animes (Id,Name,Author, Description) " +
+            //если такое уже есть то добавить нельзя
+            if (CheckExistenceByName(name))
+                return null;
+            
+            var myOrm = new MyORM(ConnectionString);
+            string nonQuery = $"insert into Animes (Name,Author, Description) " +
                               $"VALUES " +
                               $"(" +
-                              $"'{anime.Id}'," +
-                              $"'{anime.Name},'" +
-                              $"'{anime.Author}," +
-                              $"'{anime.Description}" +
+                              $"'{name}'," +
+                              $"'{author}'," +
+                              $"'{description}'" +
                               $")";
-            myORM.ExecuteNonQuery(nonQuery);
+            myOrm.ExecuteNonQuery(nonQuery);
 
-            return true;
+            var anime = GetByName(name);
+            return anime;
         }
 
-        public static bool Delete(Anime anime)
+        public static AnimeModel? GetById(int id)
         {
-            if (!CheckExistenceById(anime.Id))
+            if (!CheckExistenceById(id))
+                return null;
+
+            var myOrm = new MyORM(ConnectionString);
+            string query = $"SELECT * FROM Animes where Id='{id}'";
+
+            return myOrm.ExecuteQuery<AnimeModel>(query).FirstOrDefault();
+        }
+
+        public static AnimeModel? GetByName(string name)
+        {
+            var myOrm = new MyORM(ConnectionString);
+            string query = $"SELECT * FROM Animes where Name='{name}'";
+
+            return myOrm.ExecuteQuery<AnimeModel>(query).FirstOrDefault();
+        }
+
+        public static List<AnimeModel> GetAll()
+        {
+            var myOrm = new MyORM(ConnectionString);
+            string query = $"SELECT * FROM Animes";
+            return myOrm.ExecuteQuery<AnimeModel>(query).ToList();
+        }
+
+        public static bool Delete(AnimeModel animeModel)
+        {
+            if (!CheckExistenceById(animeModel.Id))
                 return false;
 
-            var myORM = new MyORM(connectionString);
-            string nonQuery = $"DELETE FROM Animes where Id='{anime.Id}'";
+            var myOrm = new MyORM(ConnectionString);
+            string nonQuery = $"DELETE FROM Animes where Id='{animeModel.Id}'";
 
-            myORM.ExecuteNonQuery(nonQuery);
+            myOrm.ExecuteNonQuery(nonQuery);
             return true;
         }
 
         private static bool CheckExistenceById(int id)
         {
-            var myORM = new MyORM(connectionString);
+            var myOrm = new MyORM(ConnectionString);
             string nonQuery = $"select count(*) from Animes where Id='{id}'";
-            return myORM.ExectureScalar<int>(nonQuery) > 0;
+            var temp = myOrm.CountRows(nonQuery);
+            return temp > 0;
+        }
+        private static bool CheckExistenceByName(string name)
+        {
+            var myOrm = new MyORM(ConnectionString);
+            string nonQuery = $"select count(*) from Animes where Name='{name}'";
+            var temp = myOrm.CountRows(nonQuery);
+            return temp > 0;
         }
     }
 }

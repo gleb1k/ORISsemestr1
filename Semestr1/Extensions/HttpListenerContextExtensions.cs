@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Semestr1.Extensions
 {
@@ -13,15 +14,12 @@ namespace Semestr1.Extensions
         private const string PublicFolder = "site";
         private static readonly string PublicFolderPath = Path.Join(Directory.GetCurrentDirectory(), PublicFolder);
 
-        public static async Task ServerPage(this HttpListenerContext context, string path)
+        public static async Task ShowPage(this HttpListenerContext context, string path)
         {
-            if (path == "/")
-                path = "/home/home.html";
-
             var fullPath = Path.Join(PublicFolderPath, path);
             if (!File.Exists(fullPath))
             {
-                context.Response.StatusCode = 404;
+                await context.Show404();
             }
             else
             {
@@ -48,6 +46,65 @@ namespace Semestr1.Extensions
             context.Response.StatusCode = 404;
             await context.Response.OutputStream.WriteAsync(
                 Encoding.UTF8.GetBytes("<h2>404<h2><h3>The resource can not be found :c<h3>"));
+        }
+
+        public static async Task ShowSessionExpired(this HttpListenerContext context)
+        {
+            context.Response.ContentType = "text/html; charset=utf-8";
+            context.Response.StatusCode = 440;
+            await context.Response.OutputStream.WriteAsync(
+                Encoding.UTF8.GetBytes("<h2>440<h2><h3>Your session has expired and you must log in again.<h3>"));
+        }
+        
+        /// <summary>
+        /// parcing data from request to dict
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> GetBodyData(this HttpListenerContext context)
+        {
+            var request = context.Request;
+            if (!request.HasEntityBody)
+            {
+                return null;
+            }
+
+            Stream body = request.InputStream;
+            Encoding encoding = request.ContentEncoding;
+            StreamReader reader = new StreamReader(body, encoding);
+
+            var data = HttpUtility.ParseQueryString(reader.ReadToEnd());
+            body.Close();
+            reader.Close();
+
+            var dataDict = data.ToDictionary();
+            return dataDict;
+        }
+
+        public static void AddCookie(this HttpListenerContext context, string name, string value, double lifetime)
+        {
+            context.Response.Cookies.Add(new Cookie
+            {
+                Name = name,
+                Value = value,
+                Path = "/",
+                //кука будет жить lifetime минут, после этого сессия закончится и пользователю нужно будет реавторизироваться
+                Expires = DateTime.UtcNow.AddMinutes(lifetime)
+            });
+        }
+
+        public static void DeleteCookie(this HttpListenerContext context, string name)
+        {
+            if (context.Request.Cookies[name] != null)
+            {
+                context.Response.Cookies.Add(new Cookie
+                {
+                    Name = name,
+                    Path = "/",
+                    //кука будет жить lifetime минут, после этого сессия закончится и пользователю нужно будет реавторизироваться
+                    Expires = DateTime.UtcNow.AddDays(-1)
+                });
+            }
         }
     }
 }

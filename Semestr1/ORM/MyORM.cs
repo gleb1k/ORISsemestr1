@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
-using Npgsql;
+﻿using Npgsql;
 
 namespace Semestr1.ORM
 {
     public class MyORM
     {
-        private NpgsqlConnection _connection = null;
-        private NpgsqlCommand _cmd = null;
+        private readonly NpgsqlConnection _connection;
+        private readonly NpgsqlCommand _cmd;
 
         public MyORM(string connectionString)
         {

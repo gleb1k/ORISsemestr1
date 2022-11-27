@@ -7,63 +7,74 @@ using Semestr1.ORM;
 
 namespace Semestr1.Contollers;
 
-[HttpController("Auth")]
+[HttpController("auth")]
 public class Auth
 {
-    [HttpPOST("authPOST")]
-    public static async Task Login(HttpListenerContext context)
+    [HttpGET("register")]
+    public static async Task ShowRegister(HttpListenerContext context)
     {
-        var dict = GetBodyData(context);
+        var cookie = context.Request.Cookies["session-id"];
+        if (cookie == null)
+        {
+            context.Response.StatusCode = 200;
+            await context.ShowPage(@"\register\register.html");
+            return;
+        }
+        context.Response.StatusCode = 305;
+        context.Response.Redirect(@"http://localhost:8800/user/profile");
+    }
+
+    [HttpGET("login")]
+    public static async Task ShowLogin(HttpListenerContext context)
+    {
+        var cookie = context.Request.Cookies["session-id"];
+        if (cookie == null)
+        {
+            context.Response.StatusCode = 200;
+            await context.ShowPage(@"\login\login.html");
+            return;
+        }
+        context.Response.StatusCode = 305;
+        context.Response.Redirect(@"http://localhost:8800/user/profile");
+    }
+
+    [HttpPOST("registerPOST")]
+    public static async Task Register(HttpListenerContext context)
+    {
+        var dict = context.GetBodyData();
         if (dict != null)
         {
-            var user = UserDAO.GetUser(dict["Login"], dict["Password"]);
+            var user = UserDAO.Add(dict["Login"], dict["Password"]);
             if (user != null)
             {
-                // var randomBytes = new byte[32];
-                // new Random().NextBytes(randomBytes);
-                // var sessionId = Convert.ToBase64String(randomBytes);
-
-                //Добавляю в редис на 4 часа (не работает)
-                // await RedisStore.RedisCache.StringSetAsync(sessionId, user.Id.ToString(), TimeSpan.FromHours(4));
-                context.Response.Cookies.Add(new Cookie
-                {
-                    Name = "session-id",
-                    Value = user.Id.ToString(),
-                    // Port = "8800",
-                    Path = "/",
-                    //кука будет жить 20 минут, после этого сессия закончится и пользователю нужно будет реавторизироваться
-                    Expires = DateTime.UtcNow.AddMinutes(20d)
-                });
-                ScribanMethods.GenerateProfile(@"\templates\profile.html", user);
-                await context.ServerPage(@"\profile\profile.html");
+                context.AddCookie("session-id", user.Id.ToString(), 20d);
+                context.Response.Redirect(@"http://localhost:8800/user/profile");
                 return;
             }
         }
+
         context.Response.StatusCode = 500;
         context.Response.ContentType = "text/plain; charset=utf-8";
         context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
     }
-    /// parcing data from request to dict
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
-    private static Dictionary<string, string> GetBodyData(HttpListenerContext context)
+
+    [HttpPOST("loginPOST")]
+    public static async Task Login(HttpListenerContext context)
     {
-        var request = context.Request;
-        if (!request.HasEntityBody)
+        var dict = context.GetBodyData();
+        if (dict != null)
         {
-            return null;
+            var user = UserDAO.Get(dict["Login"], dict["Password"]);
+            if (user != null)
+            {
+                context.AddCookie("session-id", user.Id.ToString(), 20d);
+                context.Response.Redirect(@"http://localhost:8800/user/profile");
+                return;
+            }
         }
 
-        Stream body = request.InputStream;
-        Encoding encoding = request.ContentEncoding;
-        StreamReader reader = new StreamReader(body, encoding);
-
-        var data = HttpUtility.ParseQueryString(reader.ReadToEnd());
-        body.Close();
-        reader.Close();
-
-        var dataDict = data.ToDictionary();
-        return dataDict;
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "text/plain; charset=utf-8";
+        context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
     }
 }
