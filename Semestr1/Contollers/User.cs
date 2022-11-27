@@ -1,18 +1,8 @@
-﻿using Semestr1.Models;
-using Semestr1.ORM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Semestr1.ORM;
 using System.Text;
-using System.Threading.Tasks;
 using Semestr1.Attributes;
-using Semestr1.Server;
-using System.Security.Cryptography.X509Certificates;
 using System.Net;
-using System.Text.Json;
-using System.Web;
 using Semestr1.Extensions;
-using StackExchange.Redis;
 
 namespace Semestr1.Contollers
 {
@@ -34,7 +24,7 @@ namespace Semestr1.Contollers
 
             var sessionId = Convert.ToInt32(context.Request.Cookies["session-id"]?.Value);
             var user = UserDAO.GetById(sessionId);
-            await ScribanMethods.GenerateProfilePage(@"\profile\profile.html", user);
+            await ScribanMethods.GenerateProfilePage(user);
             await context.ShowPage(@"\profile\profile.html");
         }
 
@@ -49,7 +39,7 @@ namespace Semestr1.Contollers
                 return;
             }
             var dict = context.GetBodyData();
-            if (dict != null)
+            if (dict.CheckEmptyness())
             {
                 //user id
                 var sessionId = Convert.ToInt32(context.Request.Cookies["session-id"]?.Value);
@@ -63,6 +53,13 @@ namespace Semestr1.Contollers
                     return;
                 }
             }
+            else
+            {
+                //something wasn't filled
+                context.Response.StatusCode = 400;
+                context.Response.ContentType = "text/plain; charset=utf-8";
+                context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Заполните поля!"));
+            }
 
             context.Response.StatusCode = 500;
             context.Response.ContentType = "text/plain; charset=utf-8";
@@ -70,7 +67,7 @@ namespace Semestr1.Contollers
         }
 
         [HttpGET("signout")]
-        public static async Task SignOut(HttpListenerContext context)
+        public static void SignOut(HttpListenerContext context)
         {
             context.DeleteCookie("session-id");
             context.Response.Redirect(@"http://localhost:8800/anime/home");

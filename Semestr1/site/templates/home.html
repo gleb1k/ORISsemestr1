@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Главная</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="icon" href="/icons/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/home/home.css">
+
+    <meta charset="utf-8">
+</head>
+
+<body>
+<h1>Home page</h1>
+<a id="register" href="http://localhost:8800/auth/register">Register</a>
+<a id="login" href="http://localhost:8800/auth/login">Login</a>
+<a id="profile" href="http://localhost:8800/user/profile">Profile</a>
+
+<form class="add_anime" method="post" action="http://localhost:8800/anime/addAnimePOST">
+    <h4>Добавьте аниме: </h4>
+    <div class="name_field">
+        <label class="sign-in-form__label">Название</label>
+        <input id="name" class="edit" type="text" placeholder="Введите название" name="Name">
+    </div>
+    <div class="author_field">
+        <label class="sign-in-form__label">Автор</label>
+        <input id="author" class="edit" type="text" placeholder="Введите ФИО автора" name="Author">
+    </div>
+    <div class="description_field">
+        <label class="sign-in-form__label">Описание</label>
+        <input id="description" class="edit" type="text" placeholder="Введите описание" name="Description">
+    </div>
+    <div class="enter_btn_container">
+        <button class="enter_btn" type="submit">Добавить</button>
+    </div>
+</form>
+
+<p>Anime list: </p>
+<ul id='animes'>
+    {{ for anime in animes }}
+    <li>
+        <p>Информация об Аниме: </p>
+        <p>ID: {{anime.id | object.default "Не задано"}}</p>
+        <p>Название: {{anime.name | object.default "Не задано"}}</p>
+        <p>Описание: {{anime.description | object.default "Не задано"}}</p>
+        <p>Url картинки: {{anime.image_url | object.default "Не задано"}}</p>
+    </li>
+    {{ end }}
+</ul>
+</body>
+
+</html>

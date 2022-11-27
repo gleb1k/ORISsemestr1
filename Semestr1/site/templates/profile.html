@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Профиль</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="icon" href="/icons/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/profile/profile.css">
+
+    <meta charset="utf-8">
+</head>
+
+<body>
+<header>
+    <a id="GoHome" href="http://localhost:8800/anime/home">На главную</a>
+    <a id="SignOut" href="http://localhost:8800/user/signout">Выйти из аккаунта</a>
+    
+    <h1>Profile</h1>
+    <p><img id="avatar" src="../images/ded_inside.png" alt="дед внутри"></p>
+</header>
+
+<p>Информация о пользователе: </p>
+<p>ID: {{id | object.default "Не задано"}}</p>
+<p>Логин: {{login | object.default "Не задано"}}</p>
+<p>Пароль: {{password | object.default "Не задано"}}</p>
+<p>Возраст: {{age | object.default "Не задано"}}</p>
+<p>Номер телефона: {{mobile | object.default "Не задано"}}</p>
+<p>ID любимого Аниме: {{favorite_anime_id | object.default "Не задано"}}</p>
+
+
+<form class="update_form" method="post" action="http://localhost:8800/user/updatePOST">
+    <h4>Введите данные, которые хотите изменить</h4>
+    <div class="age_field">
+        <label class="sign-in-form__label">Возраст</label>
+        <input id="age" class="edit" type="number" placeholder="Введите возраст" name="Age">
+    </div>
+    <div class="mobile_field">
+        <label class="sign-in-form__label">Номер телефона</label>
+        <input id="mobile" class="edit" type="text" placeholder="Введите номер телефона" name="Mobile">
+    </div>
+    <div class="favorite_anime_field">
+        <label class="sign-in-form__label">Название любимого аниме</label>
+        <input id="favoriteAnime" class="edit" type="text" placeholder="Введите название аниме" name="FaviriteAnimeName">
+    </div>
+    <div class="enter_btn_container">
+        <button class="enter_btn" type="submit">Изменить</button>
+    </div>
+</form>
+
+</body>
+
+</html>

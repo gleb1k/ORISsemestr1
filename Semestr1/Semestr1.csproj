@@ -14,6 +14,12 @@
     <None Update="site\profile\profile.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="site\templates\profile.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="site\templates\home.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 	<ItemGroup>
@@ -30,9 +36,6 @@
 	  <None Update="site\icons\icon.ico">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="site\templates" />
 	</ItemGroup>
 
 </Project>

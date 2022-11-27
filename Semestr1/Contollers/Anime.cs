@@ -13,7 +13,7 @@ namespace Semestr1.Contollers
         public static async Task ShowHome(HttpListenerContext context)
         {
             var animes = AnimeDAO.GetAll();
-            await ScribanMethods.GenerateHomePage(@"\home\home.html", animes);
+            await ScribanMethods.GenerateHomePage(animes);
             await context.ShowPage(@"\home\home.html");
         }
 
@@ -21,7 +21,7 @@ namespace Semestr1.Contollers
         public static async Task AddAnime(HttpListenerContext context)
         {
             var dict = context.GetBodyData();
-            if (dict != null)
+            if (dict.CheckEmptyness())
             {
                 var anime = AnimeDAO.Add(dict["Name"], dict["Author"], dict["Description"]);
                 if (anime != null)
@@ -30,10 +30,18 @@ namespace Semestr1.Contollers
                     return;
                 }
             }
+            else
+            {
+                //something wasn't filled
+                context.Response.StatusCode = 400;
+                context.Response.ContentType = "text/plain; charset=utf-8";
+                context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Заполните поля!"));
+            }
 
             context.Response.StatusCode = 500;
             context.Response.ContentType = "text/plain; charset=utf-8";
-            await context.Response.OutputStream.WriteAsync(Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
+            await context.Response.OutputStream.WriteAsync(
+                Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
         }
     }
 }
