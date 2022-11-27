@@ -78,6 +78,7 @@ namespace Semestr1.Contollers
                         Name = "session-id",
                         Value = user.Id.ToString(),
                         // Port = "8800",
+                        Path = "/",
                         //кука будет жить 20 минут, после этого сессия закончится и пользователю нужно будет реавторизироваться
                         Expires = DateTime.UtcNow.AddMinutes(20d)
                     });

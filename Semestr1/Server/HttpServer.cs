@@ -106,6 +106,9 @@ namespace Semestr1.Server
             var controller = assembly.GetTypes().Where(t => Attribute.IsDefined(t, typeof(HttpController)))
                 .FirstOrDefault(c => c.Name.ToLower() == controllerName.ToLower());
 
+            
+            // var controller2 = assembly.GetTypes().Where(t => Attribute.IsDefined(t, typeof(HttpController)))
+            //     .FirstOrDefault(c => c.Name.ToLower() == controllerName.ToLower());
             //попытка сделать адекватно
             //var classesWithHttpController = assembly.GetTypes().Where(t => Attribute.IsDefined(t, typeof(HttpController)));
             //var temp = classesWithHttpController.FirstOrDefault(c => c.CustomAttributes.FirstOrDefault(atr => atr.AttributeType.Name == "HttpController"));
