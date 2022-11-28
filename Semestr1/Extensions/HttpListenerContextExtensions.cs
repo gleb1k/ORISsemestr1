@@ -1,10 +1,5 @@
-﻿using Semestr1.Server;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace Semestr1.Extensions
@@ -57,7 +52,7 @@ namespace Semestr1.Extensions
         }
         
         /// <summary>
-        /// parcing data from request to dict
+        /// parsing data from request to dictionary
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
