@@ -96,7 +96,6 @@ namespace Semestr1.Extensions
                 {
                     Name = name,
                     Path = "/",
-                    //кука будет жить lifetime минут, после этого сессия закончится и пользователю нужно будет реавторизироваться
                     Expires = DateTime.UtcNow.AddDays(-1)
                 });
             }
