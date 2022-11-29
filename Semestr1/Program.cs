@@ -1,11 +1,13 @@
-﻿using Semestr1;
-using Semestr1.Models;
-using Semestr1.ORM;
-using Semestr1.Server;
-using Semestr1.Contollers;
-using Semestr1.Attributes;
+﻿using Semestr1.Server;
 
-    //var temp = ScribanMethods.GenerateProfile(@"\templates\profile.html", new User(228, "login", "password", 18, "+8938232342", 1337));
+// var myOrm = new MyORM(@"Host=localhost;Username=postgres;Password=12345678;Database=AnimeDB");
+// string nonQuery = $"insert into Posts (authorid, animeid) " +
+//                   $"VALUES " +
+//                   $"(" +
+//                   $"'1'," +
+//                   $"'1'" +
+//                   $")  RETURNING id";
+// var test = myOrm.ExecuteScalar<int>(nonQuery);
 
 //Настройка сервера
 bool _appIsRunning = true;

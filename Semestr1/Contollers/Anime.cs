@@ -36,6 +36,35 @@ namespace Semestr1.Contollers
                 context.Response.StatusCode = 400;
                 context.Response.ContentType = "text/plain; charset=utf-8";
                 context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Заполните поля!"));
+                return;
+            }
+
+            context.Response.StatusCode = 500;
+            context.Response.ContentType = "text/plain; charset=utf-8";
+            await context.Response.OutputStream.WriteAsync(
+                Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
+        }
+        [HttpPOST("addPostPOST")]
+        public static async Task AddPost(HttpListenerContext context)
+        {
+            var dict = context.GetBodyData();
+            if (dict.CheckEmptyness())
+            {
+                //todo
+                var post = PostDAO.Add(Convert.ToInt32(dict["UserId"]), Convert.ToInt32(dict["AnimeId"]));
+                if (post != null)
+                {
+                    context.Response.Redirect(@"http://localhost:8800/anime/home");
+                    return;
+                }
+            }
+            else
+            {
+                //something wasn't filled
+                context.Response.StatusCode = 400;
+                context.Response.ContentType = "text/plain; charset=utf-8";
+                context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Заполните поля!"));
+                return;
             }
 
             context.Response.StatusCode = 500;

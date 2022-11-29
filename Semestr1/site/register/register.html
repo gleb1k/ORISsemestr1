@@ -1,33 +1,96 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
+<html lang="ru">
+
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <title>Зарегестрироваться</title>
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="/register/register.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="icon" href="/icons/icon.png" type="image/x-icon">
-    <script type="text/javascript" src="/register/register.js"></script>
+    <link rel="stylesheet" href="/register/register.css">
+    <link href="/register/signin.css" rel="stylesheet">
 </head>
+
 <body>
-<a href="http://localhost:8800/anime/home">На главную</a>
 
-<form class="sign-in-form test" name="registration_form" method="post" action="http://localhost:8800/auth/registerPOST"
-      onsubmit="return validateForm()">
+<header class="p-3 bg-dark text-white">
+    <div class="container-fluid">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="http://localhost:8800/anime/home"
+                   class="navbar-brand align-items-center mb-2 mb-lg-0 text-white text-decoration-none">Anime Booba</a>
 
-    <h1>Регистрация</h1>
-    <div class="login_field row">
-        <label class="sign-in-form__label">Email</label>
-        <input id="login" class="edit" type="text" placeholder="Введите e-mail" name="Login">
-        <div class="error" id="loginErr"></div>
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="http://localhost:8800/anime/home" class="nav-link px-2 text-secondary">Home</a></li>
+                    <li><a href="#" class="nav-link px-2 text-white">Forum</a></li>
+                </ul>
+
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                    <input type="search" class="form-control form-control-dark" placeholder="Search..."
+                           aria-label="Search">
+                </form>
+
+                <div class="text-end">
+                    <a href="http://localhost:8800/auth/login">
+                        <button type="button" class="btn btn-outline-light me-2">Войти</button>
+                    </a>
+                    <a href="http://localhost:8800/auth/register">
+                        <button type="button" class="btn btn-warning">Зарегестрироваться</button>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="password_field row">
-        <label class="sign-in-form__label">Password</label>
-        <input id="pass" class="edit" type="password" placeholder="Введите пароль" name="Password">
-        <div class="error" id="passErr"></div>
-    </div>
-    <div class="enter_btn_container">
-        <button class="enter_btn bad_submit" type="submit">Зарегестрироваться</button>
-    </div>
-</form>
+</header>
+
+<main class="form-signin">
+    <form>
+        <img class="mb-4" src="../images/ded_inside.png" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">Создание аккаунта</h1>
+
+        <div class="form-floating">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Email</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingPassword">Пароль</label>
+        </div>
+
+<!--        <div class="checkbox mb-3">-->
+<!--            <label>-->
+<!--                <input type="checkbox" value="remember-me"> Remember me-->
+<!--            </label>-->
+<!--        </div>-->
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Зарегестрироваться</button>
+    </form>
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>
+
+<!--        <form class="sign-in-form test" name="registration_form" method="post"-->
+<!--            action="http://localhost:8800/auth/registerPOST" onsubmit="return validateForm()">-->
+
+<!--            <h1>Регистрация</h1>-->
+<!--            <div class="login_field row">-->
+<!--                <label class="sign-in-form__label">Email</label>-->
+<!--                <input id="login" class="edit" type="text" placeholder="Введите e-mail" name="Login">-->
+<!--                <div class="error" id="loginErr"></div>-->
+<!--            </div>-->
+<!--            <div class="password_field row">-->
+<!--                <label class="sign-in-form__label">Password</label>-->
+<!--                <input id="pass" class="edit" type="password" placeholder="Введите пароль" name="Password">-->
+<!--                <div class="error" id="passErr"></div>-->
+<!--            </div>-->
+<!--            <div class="enter_btn_container">-->
+<!--                <button class="enter_btn bad_submit" type="submit">Зарегестрироваться</button>-->
+<!--            </div>-->
+<!--        </form>-->

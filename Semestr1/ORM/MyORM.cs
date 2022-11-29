@@ -71,7 +71,7 @@ namespace Semestr1.ORM
         }
 
         //Первый столбец первой попавшей строки
-        public T ExectureScalar<T>(string query)
+        public T ExecuteScalar<T>(string query)
         {
             T result = default;
             using (_connection)

@@ -1,83 +1,49 @@
-body {
-    font-size: 16px;
-    background: #f9f9f9;
-    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
 
-h1 {
-    text-align: center;
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
+#header .b-example-divider {
+    height: 3rem;
+    background-color: rgba(0, 0, 0, .1);
+    border: solid rgba(0, 0, 0, .15);
+    border-width: 1px 0;
+    box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
 }
 
-form {
-    width: 300px;
-    background: #fff;
-    padding: 15px 40px 40px;
-    border: 1px solid #ccc;
-    margin: 50px auto 0;
-    border-radius: 5px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px
-}
-
-label i {
-    color: #999;
-    font-size: 80%;
-}
-
-input:not([id="register"]), select {
-    border: 1px solid #ccc;
-    padding: 10px;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: 2px;
-}
-
-.row {
-    padding-bottom: 10px;
-}
-
-.form-inline {
-    border: 1px solid #ccc;
-    padding: 8px 10px 4px;
-    border-radius: 2px;
-}
-
-.form-inline label, .form-inline input {
-    display: inline-block;
-    width: auto;
-    padding-right: 15px;
-}
-
-.error {
-    color: red;
-    font-size: 90%;
-}
-
-button[type="submit"] {
-    font-size: 110%;
-    font-weight: 100;
-    background: #006dcc;
-    box-shadow: 0 3px 0 #0165b6;
+#header .form-control-dark {
     color: #fff;
-    margin-top: 10px;
-    cursor: pointer;
-    border: 1px solid #016BC1;
-    padding: 10px;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: 2px;
+    background-color: var(--bs-dark);
+    border-color: var(--bs-gray);
+}
+#header .form-control-dark:focus {
+    color: #fff;
+    background-color: var(--bs-dark);
+    border-color: #fff;
+    box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
 }
 
-.post_h {
-    text-align: center;
-    border-style: solid;
-    border-color: blue;
-    width: 400px;
-    margin: 15px 0 15px 560px;
-    word-wrap: break-word;
+#header .bi {
+    vertical-align: -.125em;
+    fill: currentColor;
+}
+
+#header .text-small {
+    font-size: 85%;
+}
+
+#header .dropdown-toggle {
+    outline: 0;
+}
+
+#header .text-end a {
+    display: inline-block;
 }
