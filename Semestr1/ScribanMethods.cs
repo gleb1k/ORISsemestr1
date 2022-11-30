@@ -29,7 +29,7 @@ public static class ScribanMethods
         }
     }
 
-    public static async Task GenerateHomePage(List<AnimeModel> animeList)
+    public static async Task GenerateHomePage(List<AnimeModel> animeList, UserModel user)
     {
         var templatePath = Path.Join(PublicFolderPath, @"\templates\home.html");
         var resultPath = Path.Join(PublicFolderPath, @"\home\home.html");
@@ -39,7 +39,7 @@ public static class ScribanMethods
 
             // Parse a scriban template
             var template = Template.Parse(html);
-            var result = template.RenderAsync(new { Animes = animeList });
+            var result = template.RenderAsync(new { Animes = animeList, User = user });
 
             await File.WriteAllTextAsync(resultPath, result.Result);
         }

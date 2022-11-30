@@ -46,7 +46,8 @@ namespace Semestr1.Contollers
 
                 var age = Convert.ToInt32(dict["Age"]);
                 var mobile = dict["Mobile"];
-                var user = UserDAO.UpdateUser(sessionId, age, mobile);
+                var username = dict["Username"];
+                var user = UserDAO.UpdateUser(sessionId,username, age, mobile);
                 if (user != null)
                 {
                     context.Response.Redirect(@"http://localhost:8800/user/profile");
@@ -67,7 +68,7 @@ namespace Semestr1.Contollers
         }
 
         [HttpGET("signout")]
-        public static void SignOut(HttpListenerContext context)
+        public static async Task SignOut(HttpListenerContext context)
         {
             context.DeleteCookie("session-id");
             context.Response.Redirect(@"http://localhost:8800/anime/home");

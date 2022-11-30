@@ -60,6 +60,7 @@ public class Auth
             context.Response.StatusCode = 400;
             context.Response.ContentType = "text/plain; charset=utf-8";
             context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Заполните поля!"));
+            return;
         }
 
         context.Response.StatusCode = 500;
@@ -86,11 +87,13 @@ public class Auth
             //something wasn't filled
             context.Response.StatusCode = 400;
             context.Response.ContentType = "text/plain; charset=utf-8";
-            context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Заполните поля!"));
+            await context.Response.OutputStream.WriteAsync(Encoding.UTF8.GetBytes("Заполните поля!"));
+            return;
         }
 
         context.Response.StatusCode = 500;
         context.Response.ContentType = "text/plain; charset=utf-8";
-        context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
+        await context.Response.OutputStream.WriteAsync(Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
+
     }
 }

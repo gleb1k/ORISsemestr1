@@ -10,20 +10,29 @@ namespace Semestr1.Models
     {
         public string Login { get; set; }
         public string Password { get; set; }
+        public string Username { get; set; }
         public int? Age { get; set; }
         public string Mobile { get; set; }
+        public string AvatarUrl { get; set; }
+
         public int? FavoriteAnimeId { get; set; }
 
-        public UserModel() { }
 
-        public UserModel(int id, string login, string password, int? age, string mobile, int? favoriteAnime)
+        public UserModel()
+        {
+        }
+
+        public UserModel(int id, string login, string password, string username, int? age, string mobile,
+            string avatarUrl, int? favoriteAnimeId)
         {
             Id = id;
             Login = login;
             Password = password;
+            Username = username;
             Age = age;
             Mobile = mobile;
-            FavoriteAnimeId = favoriteAnime;
+            AvatarUrl = avatarUrl;
+            FavoriteAnimeId = favoriteAnimeId;
         }
     }
 }

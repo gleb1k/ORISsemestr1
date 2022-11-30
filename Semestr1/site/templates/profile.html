@@ -42,8 +42,8 @@
     <div class="container">
         <div class="row d-flex justify-content-center mt-5">
             <div class="col-md-3 text-Start mb-5 pb-5">
-                <img id="avatar" src="/images/ded_inside.png" class="rounded float-start" alt="Avatar">
-                <h1 class="display-6">Login</h1>
+                <img id="avatar" src="" class="rounded float-start" alt="Avatar">
+                <h1 class="display-6">{{username | object.default "Не задано"}}</h1>
             </div>
             <div class="col-md-9">
                 <h4>Информация о пользователе: </h4>
@@ -52,10 +52,13 @@
                 <p>Пароль: {{password | object.default "Не задано"}}</p>
                 <p>Возраст: {{age | object.default "Не задано"}}</p>
                 <p>Номер телефона: {{mobile | object.default "Не задано"}}</p>
-                <p>ID любимого Аниме: {{favorite_anime_id | object.default "Не задано"}}</p>
                 <form method="post" action="http://localhost:8800/user/updatePOST">
                     <h4>Введите данные, которые хотите изменить</h4>
-                    <div class="age_field">
+                    <div class="fields">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingInput" name="Username">
+                            <label for="floatingInput">Имя пользователя</label>
+                        </div>
                         <div class="form-floating">
                             <input type="number" class="form-control" id="floatingInput" name="Age">
                             <label for="floatingInput">Возраст</label>

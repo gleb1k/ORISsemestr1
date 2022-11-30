@@ -16,17 +16,25 @@ namespace Semestr1.Models
         //УРЛ картинки
         public string ImageUrl { get; set; }
 
-        public AnimeModel(int id, string name, string author, string description, string imageUrl)
+        public string Genre { get; set; }
+        public string Studio { get; set; }
+        public string AgeRating { get; set; }
+
+        public AnimeModel()
+        {
+        }
+
+        public AnimeModel(int id, string name, string author, string description, string imageUrl, string genre, string studio,
+            string ageRating)
         {
             Id = id;
             Name = name;
             Author = author;
             Description = description;
             ImageUrl = imageUrl;
-        }
-
-        public AnimeModel()
-        {
+            Genre = genre;
+            Studio = studio;
+            AgeRating = ageRating;
         }
     }
 }

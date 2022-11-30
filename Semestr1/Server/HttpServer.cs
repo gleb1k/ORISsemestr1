@@ -74,6 +74,7 @@ namespace Semestr1.Server
                         var method = GetMethodByContext(context);
                         if (method != null)
                         {
+                            //должен быть таск, иначе не робит
                             await (Task)method.Invoke(null, new object[] { context });
                         }
                         else

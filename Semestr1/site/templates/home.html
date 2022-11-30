@@ -4,10 +4,10 @@
 <head>
     <meta charset="utf-8">
     <title>Главная</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="icon" href="/icons/icon.png" type="image/x-icon">
     <link rel="stylesheet" href="/home/home.css">
     <link href="/css/header.css" rel="stylesheet">
@@ -37,41 +37,180 @@
     </div>
 </header>
 
-    <main>
-        <form class="add_anime" method="post" action="http://localhost:8800/anime/addAnimePOST">
-            <h4>Добавьте аниме: </h4>
-            <div class="name_field">
-                <label class="sign-in-form__label">Название</label>
-                <input id="name" class="edit" type="text" placeholder="Введите название" name="Name">
-            </div>
-            <div class="author_field">
-                <label class="sign-in-form__label">Автор</label>
-                <input id="author" class="edit" type="text" placeholder="Введите ФИО автора" name="Author">
-            </div>
-            <div class="description_field">
-                <label class="sign-in-form__label">Описание</label>
-                <input id="description" class="edit" type="text" placeholder="Введите описание" name="Description">
-            </div>
-            <div class="enter_btn_container">
-                <button class="enter_btn" type="submit">Добавить</button>
-            </div>
-        </form>
+<main>
 
-        <p>Anime list: </p>
-        <ul id='animes'>
-            {{ for anime in animes }}
-            <li>
-                <p>Информация об Аниме: </p>
-                <p>ID: {{anime.id | object.default "Не задано"}}</p>
-                <p>Название: {{anime.name | object.default "Не задано"}}</p>
-                <p>Описание: {{anime.description | object.default "Не задано"}}</p>
-                <p>Url картинки: {{anime.image_url | object.default "Не задано"}}</p>
-            </li>
-            {{ end }}
-        </ul>
+    <div class="container-xl">
 
-    </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        <button type="button" class="btn btn-outline-dark mt-2 " data-bs-toggle="modal" data-bs-target="#add_anime">
+            Добавить аниме
+        </button>
+        <div class="modal fade" id="add_anime" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Введите данные</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="add_anime" method="post" action="http://localhost:8800/anime/addAnimePOST">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingInput" name="Genre">
+                                <label for="floatingInput">Жанр</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingInput" name="Studio">
+                                <label for="floatingInput">Студия</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="floatingInput" name="AgeRating">
+                                <label for="floatingInput">Возрастной рейтинг</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingInput" name="Description">
+                                <label for="floatingInput">Описание</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <button form="add_anime" class="btn btn-primary"
+                                type="submit">Сохранить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row bg-dark mt-3 rounded row-cols-4">
+            <div id="user" class="col-4 ">
+                <div class="user text-white mt-2">
+                    <img class="rounded-circle"
+                         src="https://sun9-29.userapi.com/impg/Tzxg7xNuKSlfTiVaZHYufgBnKvOOa6yzTfxb_w/TsCTylATbZE.jpg?size=720x660&quality=96&sign=306635bf42b54934d19d618d0d2388a0&type=album"
+                         width="50px" height="50px">
+                    <p class="fs-5 d-inline ms-1 ">{{user.Username | object.default "Не задано"}}</p>
+                </div>
+            </div>
+            <div class="col-8 text-end text-white mt-2">
+                <a class="text text-decoration-none text-white" href="#">Добавить в любимое</a>
+            </div>
+            <div class="col-3">
+                <img class="w-100 mt-2 mb-2 rounded"
+                     src="https://static.insales-cdn.com/images/products/1/3612/512323100/1.jpg">
+            </div>
+            <div class="col-9 text-white align-items-c">
+                <div class="info">
+                    <p class="fw-bold fs-2 text">Человек Бензопила</p>
+
+                    <div class="info_block">
+                        <div class="fw-bold d-inline fs-6">Жанр:</div>
+                        <div class="text d-inline ">Экшен, приключения, сёнэн</div>
+                    </div>
+                    <div class="info_block">
+                        <div class="fw-bold fs-6 d-inline">Студия:</div>
+                        <div class="text d-inline">MAPPA</div>
+                    </div>
+                    <div class="info_block">
+                        <div class="fw-bold fs-6 d-inline">Возрастной рейтинг:</div>
+                        <div class="text d-inline">18+</div>
+                    </div>
+                    <div class="info_block">
+                        <div class="fw-bold fs-6 d-inline">Описание:</div>
+                        <div class="text d-inline">«Человек-бензопила» (яп. チェンソーマン Тиэнсо:ман, Chainsaw Man) —
+                            манга, написанная и проиллюстрированная Тацуки Фудзимото. Первая часть публиковалась в
+                            журнале Shueisha Weekly Shōnen Jump с 3 декабря 2018 по 14 декабря 2020 года[7] , а
+                            вторая часть публикуется в онлайн-журнале Shonen Jump+ издательства Shueisha с 13 июля
+                            2022 года. Её главы были собраны в двенадцать танкобонов на октябрь 2022. Премьера
+                            адаптации в формате аниме-телесериала, снятого студией MAPPA, состоялась 11 октября 2022
+                            года.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row bg-dark mt-3 rounded row-cols-4">
+            <div id="user" class="col-4 ">
+                <div class="user text-white mt-2">
+                    <img class="rounded-circle"
+                         src="{{user.avatar_url | object.default https://sportshub.cbsistatic.com/i/2022/05/16/3eee5cbd-0e19-48fd-a094-500cfe42c931/spy-x-family-anya-heh-anime.jpg}}"
+                         width="50px" height="50px">
+                    <p class="fs-5 d-inline ms-1 ">{{user.username | object.default "Не задано"}}</p>
+                </div>
+            </div>
+            <div class="col-8 text-end text-white mt-2">
+                <a class="text text-decoration-none text-white" href="#">Добавить в любимое</a>
+            </div>
+            <div class="col-3">
+                <img class="w-100 mt-2 mb-2 rounded"
+                     src="https://static.insales-cdn.com/images/products/1/3612/512323100/1.jpg">
+            </div>
+            <div class="col-9 text-white align-items-c">
+                <div class="info">
+                    <p class="fw-bold fs-2 text">{{anime.name}}</p>
+
+                    <div class="info_block">
+                        <div class="fw-bold d-inline fs-6">Жанр:</div>
+                        <div class="text d-inline ">{{anime.genre}}</div>
+                    </div>
+                    <div class="info_block">
+                        <div class="fw-bold fs-6 d-inline">Студия:</div>
+                        <div class="text d-inline">{{anime.studio}}</div>
+                    </div>
+                    <div class="info_block">
+                        <div class="fw-bold fs-6 d-inline">Возрастной рейтинг:</div>
+                        <div class="text d-inline">{{anime.age_rating}}</div>
+                    </div>
+                    <div class="info_block">
+                        <div class="fw-bold fs-6 d-inline">Описание:</div>
+                        <div class="text d-inline">{{anime.description}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- <img src="https://sun9-29.userapi.com/impg/Tzxg7xNuKSlfTiVaZHYufgBnKvOOa6yzTfxb_w/TsCTylATbZE.jpg?size=720x660&quality=96&sign=306635bf42b54934d19d618d0d2388a0&type=album" alt="kit">
+    <form class="add_anime" method="post" action="http://localhost:8800/anime/addAnimePOST">
+        <h4>Добавьте аниме: </h4>
+        <div class="name_field">
+            <label class="sign-in-form__label">Название</label>
+            <input id="name" class="edit" type="text" placeholder="Введите название" name="Name">
+        </div>
+        <div class="author_field">
+            <label class="sign-in-form__label">Автор</label>
+            <input id="author" class="edit" type="text" placeholder="Введите ФИО автора" name="Author">
+        </div>
+        <div class="description_field">
+            <label class="sign-in-form__label">Описание</label>
+            <input id="description" class="edit" type="text" placeholder="Введите описание" name="Description">
+        </div>
+        <div class="enter_btn_container">
+            <button class="enter_btn" type="submit">Добавить</button>
+        </div>
+    </form>
+
+    <p>Anime list: </p>
+    <ul id='animes'>
+        {{ for anime in animes }}
+        <li>
+            <p>Информация об Аниме: </p>
+            <p>ID: {{anime.id | object.default "Не задано"}}</p>
+            <p>Название: {{anime.name | object.default "Не задано"}}</p>
+            <p>Описание: {{anime.description | object.default "Не задано"}}</p>
+            <p>Url картинки: {{anime.image_url | object.default "Не задано"}}</p>
+        </li>
+        {{ end }}
+    </ul> -->
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
 </body>

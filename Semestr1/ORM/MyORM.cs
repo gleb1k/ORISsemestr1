@@ -78,8 +78,6 @@ namespace Semestr1.ORM
             {
                 _cmd.CommandText = query;
                 _connection.Open();
-                // if (T is )
-                //     //todo
                 result = (T)_cmd.ExecuteScalar();
             }
 

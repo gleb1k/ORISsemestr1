@@ -15,10 +15,25 @@ namespace Semestr1.ORM
 
             var myOrm = new MyORM(ConnectionString);
             string nonQuery = $"insert into Users (Login, Password) " +
-                              $"values ('{login}','{password}')";
-            myOrm.ExecuteNonQuery(nonQuery);
+                              $"values " +
+                              $"(" +
+                              $"'{login}'," +
+                              $"'{password}'" +
+                              $") RETURNING id;";
+            var addedId = myOrm.ExecuteScalar<int>(nonQuery);
+            GenerateUsername(addedId);
+            
+            return GetById(addedId);
+        }
 
-            return GetByLogin(login);
+        public static void GenerateUsername(int userId)
+        {
+            var myOrm = new MyORM(ConnectionString);
+            string nonQuery = $"Update Users " +
+                              $"set username='user{userId}'" +
+                              $"from (select * from Users where id = {userId}) as Selected " +
+                              $"where users.id = Selected.id";
+            myOrm.ExecuteNonQuery(nonQuery);
         }
 
         public static UserModel? Get(string login, string password)
@@ -31,14 +46,15 @@ namespace Semestr1.ORM
         }
 
 
-        public static UserModel? UpdateUser(int userId, int age, string mobile)
+        public static UserModel? UpdateUser(int userId, string username, int age, string mobile)
         {
             if (!CheckExistenceById(userId))
                 return null;
 
             string nonQuery = $"Update Users " +
                               $"Set age='{age}'," +
-                              $"mobile='{mobile}' " +
+                              $"mobile='{mobile}', " +
+                              $"username='{username}'" +
                               $"from (select * from Users where id = {userId}) as Selected " +
                               $"where users.id = Selected.id";
 
@@ -58,7 +74,7 @@ namespace Semestr1.ORM
             myOrm.ExecuteNonQuery(nonQuery);
             return true;
         }
-
+        
         public static UserModel? GetById(int id)
         {
             if (!CheckExistenceById(id))

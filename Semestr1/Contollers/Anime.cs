@@ -2,6 +2,7 @@
 using System.Text;
 using Semestr1.Attributes;
 using Semestr1.Extensions;
+using Semestr1.Models;
 using Semestr1.ORM;
 
 namespace Semestr1.Contollers
@@ -13,7 +14,8 @@ namespace Semestr1.Contollers
         public static async Task ShowHome(HttpListenerContext context)
         {
             var animes = AnimeDAO.GetAll();
-            await ScribanMethods.GenerateHomePage(animes);
+            var user = new UserModel();
+            await ScribanMethods.GenerateHomePage(animes, user);
             await context.ShowPage(@"\home\home.html");
         }
 
@@ -51,6 +53,7 @@ namespace Semestr1.Contollers
             if (dict.CheckEmptyness())
             {
                 //todo
+                
                 var post = PostDAO.Add(Convert.ToInt32(dict["UserId"]), Convert.ToInt32(dict["AnimeId"]));
                 if (post != null)
                 {
