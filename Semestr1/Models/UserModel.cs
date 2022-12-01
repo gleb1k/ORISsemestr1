@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Semestr1.ORM;
 
 namespace Semestr1.Models
 {
@@ -33,6 +34,17 @@ namespace Semestr1.Models
             Mobile = mobile;
             AvatarUrl = avatarUrl;
             FavoriteAnimeId = favoriteAnimeId;
+        }
+        public UserNormalModel GetNormalModel()
+        {
+            if (FavoriteAnimeId == null)
+            {
+                return new UserNormalModel(Login,Password,Username,Age,Mobile,AvatarUrl,null);
+            }
+            var id = Convert.ToInt32(FavoriteAnimeId);
+            var anime = AnimeDAO.GetById(id);
+            return new UserNormalModel(Login,Password,Username,Age,Mobile,AvatarUrl,anime);
+
         }
     }
 }

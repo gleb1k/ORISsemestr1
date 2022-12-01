@@ -52,7 +52,15 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="add_anime" method="post" action="http://localhost:8800/anime/addAnimePOST">
+                        <form id="add_anime" method="post" action="http://localhost:8800/anime/addPostPOST">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingInput" name="PostName">
+                                <label for="floatingInput">Название записи</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingInput" name="Name">
+                                <label for="floatingInput">Название</label>
+                            </div>
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="floatingInput" name="Genre">
                                 <label for="floatingInput">Жанр</label>
@@ -88,7 +96,7 @@
                     <img class="rounded-circle"
                          src="https://sun9-29.userapi.com/impg/Tzxg7xNuKSlfTiVaZHYufgBnKvOOa6yzTfxb_w/TsCTylATbZE.jpg?size=720x660&quality=96&sign=306635bf42b54934d19d618d0d2388a0&type=album"
                          width="50px" height="50px">
-                    <p class="fs-5 d-inline ms-1 ">{{user.Username | object.default "Не задано"}}</p>
+                    <p class="fs-5 d-inline ms-1 ">временно</p>
                 </div>
             </div>
             <div class="col-8 text-end text-white mt-2">
@@ -129,13 +137,14 @@
 
             </div>
         </div>
+
+        {{ for post in posts }}
         <div class="row bg-dark mt-3 rounded row-cols-4">
             <div id="user" class="col-4 ">
                 <div class="user text-white mt-2">
-                    <img class="rounded-circle"
-                         src="{{user.avatar_url | object.default https://sportshub.cbsistatic.com/i/2022/05/16/3eee5cbd-0e19-48fd-a094-500cfe42c931/spy-x-family-anya-heh-anime.jpg}}"
-                         width="50px" height="50px">
-                    <p class="fs-5 d-inline ms-1 ">{{user.username | object.default "Не задано"}}</p>
+                    <!--картинку сюда -->
+                    <p class="fs-5 d-inline ms-1 ">{{post.user.username | object.default "Не задано"}}</p>
+                    <p class="fs-5 d-inline ms-1 ">{{post.name | object.default "Не задано"}}</p>
                 </div>
             </div>
             <div class="col-8 text-end text-white mt-2">
@@ -147,29 +156,29 @@
             </div>
             <div class="col-9 text-white align-items-c">
                 <div class="info">
-                    <p class="fw-bold fs-2 text">{{anime.name}}</p>
+                    <p class="fw-bold fs-2 text">{{post.anime.name}}</p>
 
                     <div class="info_block">
                         <div class="fw-bold d-inline fs-6">Жанр:</div>
-                        <div class="text d-inline ">{{anime.genre}}</div>
+                        <div class="text d-inline ">{{post.anime.genre}}</div>
                     </div>
                     <div class="info_block">
                         <div class="fw-bold fs-6 d-inline">Студия:</div>
-                        <div class="text d-inline">{{anime.studio}}</div>
+                        <div class="text d-inline">{{post.anime.studio}}</div>
                     </div>
                     <div class="info_block">
                         <div class="fw-bold fs-6 d-inline">Возрастной рейтинг:</div>
-                        <div class="text d-inline">{{anime.age_rating}}</div>
+                        <div class="text d-inline">{{post.anime.age_rating}}</div>
                     </div>
                     <div class="info_block">
                         <div class="fw-bold fs-6 d-inline">Описание:</div>
-                        <div class="text d-inline">{{anime.description}}
+                        <div class="text d-inline">{{post.anime.description}}
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
+        {{ end }}
 
     </div>
 

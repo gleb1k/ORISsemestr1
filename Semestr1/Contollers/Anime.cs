@@ -13,52 +13,51 @@ namespace Semestr1.Contollers
         [HttpGET("home")]
         public static async Task ShowHome(HttpListenerContext context)
         {
-            var animes = AnimeDAO.GetAll();
-            var user = new UserModel();
-            await ScribanMethods.GenerateHomePage(animes, user);
+            var posts = PostDAO.GetAll();
+            List<PostNormalModel> newPosts = new List<PostNormalModel>();
+            foreach (var post in posts)
+            {
+                newPosts.Add(post.GetNormalModel());
+            }
+            
+            await ScribanMethods.GenerateHomePage(newPosts);
             await context.ShowPage(@"\home\home.html");
-        }
-
-        [HttpPOST("addAnimePOST")]
-        public static async Task AddAnime(HttpListenerContext context)
-        {
-            var dict = context.GetBodyData();
-            if (dict.CheckEmptyness())
-            {
-                var anime = AnimeDAO.Add(dict["Name"], dict["Author"], dict["Description"]);
-                if (anime != null)
-                {
-                    context.Response.Redirect(@"http://localhost:8800/anime/home");
-                    return;
-                }
-            }
-            else
-            {
-                //something wasn't filled
-                context.Response.StatusCode = 400;
-                context.Response.ContentType = "text/plain; charset=utf-8";
-                context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Заполните поля!"));
-                return;
-            }
-
-            context.Response.StatusCode = 500;
-            context.Response.ContentType = "text/plain; charset=utf-8";
-            await context.Response.OutputStream.WriteAsync(
-                Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
         }
         [HttpPOST("addPostPOST")]
         public static async Task AddPost(HttpListenerContext context)
         {
+            var cookie = context.Request.Cookies["session-id"];
+            //просрочилась сессия
+            if (cookie == null)
+            {
+                await context.ShowSessionExpired();
+                return;
+            }
             var dict = context.GetBodyData();
             if (dict.CheckEmptyness())
             {
-                //todo
+                //user id
+                var userId = Convert.ToInt32(context.Request.Cookies["session-id"]?.Value);
+
+                var animeName = dict["Name"];
+                var animeGenre = dict["Genre"];
+                var animeStudio = dict["Studio"];
+                var animeAgeRating = dict["AgeRating"];
+                var animeDescription = dict["Description"];
+
+                var anime = AnimeDAO.Add(animeName, animeDescription, animeGenre, animeStudio, animeAgeRating);
                 
-                var post = PostDAO.Add(Convert.ToInt32(dict["UserId"]), Convert.ToInt32(dict["AnimeId"]));
-                if (post != null)
+                if (anime != null)
                 {
-                    context.Response.Redirect(@"http://localhost:8800/anime/home");
-                    return;
+
+                    var postName = dict["PostName"];
+                    var post = PostDAO.Add(postName,userId, anime.Id);
+
+                    if (post != null)
+                    {
+                        context.Response.Redirect(@"http://localhost:8800/anime/home");
+                        return;
+                    }
                 }
             }
             else
@@ -72,8 +71,19 @@ namespace Semestr1.Contollers
 
             context.Response.StatusCode = 500;
             context.Response.ContentType = "text/plain; charset=utf-8";
-            await context.Response.OutputStream.WriteAsync(
-                Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
+            context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Не удалось обновить данные на сервере!"));
+        }
+        
+        [HttpPOST("addtofavoritePOST")]
+        public static async Task AddAnimeToFavorite(HttpListenerContext context)
+        {
+            var cookie = context.Request.Cookies["session-id"];
+            //просрочилась сессия
+            if (cookie == null)
+            {
+                await context.ShowSessionExpired();
+                return;
+            }
         }
     }
 }

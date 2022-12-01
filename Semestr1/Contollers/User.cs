@@ -24,7 +24,7 @@ namespace Semestr1.Contollers
 
             var sessionId = Convert.ToInt32(context.Request.Cookies["session-id"]?.Value);
             var user = UserDAO.GetById(sessionId);
-            await ScribanMethods.GenerateProfilePage(user);
+            await ScribanMethods.GenerateProfilePage(user.GetNormalModel());
             await context.ShowPage(@"\profile\profile.html");
         }
 

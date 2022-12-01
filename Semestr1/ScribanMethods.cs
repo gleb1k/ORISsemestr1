@@ -9,7 +9,7 @@ public static class ScribanMethods
     private const string PublicFolder = "site";
     private static readonly string PublicFolderPath = Path.Join(Directory.GetCurrentDirectory(), PublicFolder);
 
-    public static async Task GenerateProfilePage(UserModel userModel)
+    public static async Task GenerateProfilePage(UserNormalModel userModel)
     {
         var templatePath = Path.Join(PublicFolderPath, @"\templates\profile.html");
         var resultPath = Path.Join(PublicFolderPath, @"\profile\profile.html");
@@ -29,7 +29,7 @@ public static class ScribanMethods
         }
     }
 
-    public static async Task GenerateHomePage(List<AnimeModel> animeList, UserModel user)
+    public static async Task GenerateHomePage(List<PostNormalModel> posts)
     {
         var templatePath = Path.Join(PublicFolderPath, @"\templates\home.html");
         var resultPath = Path.Join(PublicFolderPath, @"\home\home.html");
@@ -39,7 +39,7 @@ public static class ScribanMethods
 
             // Parse a scriban template
             var template = Template.Parse(html);
-            var result = template.RenderAsync(new { Animes = animeList, User = user });
+            var result = template.RenderAsync(new { Posts = posts});
 
             await File.WriteAllTextAsync(resultPath, result.Result);
         }

@@ -9,7 +9,6 @@ namespace Semestr1.Models
     public class AnimeModel : EntityBase
     {
         public string Name { get; set; }
-        public string Author { get; set; }
 
         public string Description { get; set; }
 
@@ -24,12 +23,11 @@ namespace Semestr1.Models
         {
         }
 
-        public AnimeModel(int id, string name, string author, string description, string imageUrl, string genre, string studio,
+        public AnimeModel(int id, string name, string description, string imageUrl, string genre, string studio,
             string ageRating)
         {
             Id = id;
             Name = name;
-            Author = author;
             Description = description;
             ImageUrl = imageUrl;
             Genre = genre;

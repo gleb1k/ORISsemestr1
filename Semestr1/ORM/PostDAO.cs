@@ -7,16 +7,17 @@ public static class PostDAO
 {
     private static readonly string ConnectionString = ServerSettings._connectionString;
 
-    public static PostModel Add(int userId, int animeId)
+    public static PostModel? Add(string name, int userId, int animeId)
     {
         //если такое уже есть то добавить нельзя
         if (CheckExistence(userId, animeId))
             return null;
 
         var myOrm = new MyORM(ConnectionString);
-        string nonQuery = $"insert into Posts (authorid, animeid) " +
+        string nonQuery = $"insert into Posts (name,userid, animeid) " +
                           $"VALUES " +
                           $"(" +
+                          $"'{name}'," +
                           $"'{userId}'," +
                           $"'{animeId}'" +
                           $") RETURNING id;";
@@ -35,11 +36,17 @@ public static class PostDAO
         return myOrm.ExecuteQuery<PostModel>(query).FirstOrDefault();
     }
 
-    public static bool CheckExistence(int authorId, int animeId)
+    public static bool CheckExistence(int userId, int animeId)
     {
         var myOrm = new MyORM(ConnectionString);
-        string nonQuery = $"select count(*) from Posts where authorId='{authorId}' and animeId='{animeId}'";
+        string nonQuery = $"select count(*) from Posts where userid='{userId}' and animeId='{animeId}'";
         var temp = myOrm.CountRows(nonQuery);
         return temp > 0;
+    }
+    public static List<PostModel> GetAll()
+    {
+        var myOrm = new MyORM(ConnectionString);
+        string query = $"SELECT * FROM Posts";
+        return myOrm.ExecuteQuery<PostModel>(query).ToList();
     }
 }

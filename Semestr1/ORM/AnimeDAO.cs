@@ -12,23 +12,28 @@ namespace Semestr1.ORM
     {
         private static readonly string ConnectionString = ServerSettings._connectionString;
 
-        public static AnimeModel? Add(string name, string author, string description)
+        public static AnimeModel? Add(string name, string description,  string genre, string studio, string ageRating, string imageUrl = "not defined")
         {
             //если такое уже есть то добавить нельзя
             if (CheckExistenceByName(name))
                 return null;
             
+
             var myOrm = new MyORM(ConnectionString);
-            string nonQuery = $"insert into Animes (Name,Author, Description) " +
+            string nonQuery = $"insert into Animes (Name,description,genre,studio, agerating,imageurl) " +
                               $"VALUES " +
                               $"(" +
                               $"'{name}'," +
-                              $"'{author}'," +
-                              $"'{description}'" +
-                              $")";
-            myOrm.ExecuteNonQuery(nonQuery);
+                              $"'{description}'," +
+                              $"'{genre}'," +
+                              $"'{studio}'," +
+                              $"'{ageRating}'," +
+                              $"'{imageUrl}'" +
+                              $") RETURNING id;";
 
-            var anime = GetByName(name);
+            var addedId = myOrm.ExecuteScalar<int>(nonQuery);
+            var anime = GetById(addedId);
+
             return anime;
         }
 
@@ -84,5 +89,7 @@ namespace Semestr1.ORM
             var temp = myOrm.CountRows(nonQuery);
             return temp > 0;
         }
+        
+        
     }
 }
