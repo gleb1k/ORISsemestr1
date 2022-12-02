@@ -87,6 +87,18 @@ namespace Semestr1.Extensions
                 Expires = DateTime.UtcNow.AddMinutes(lifetime)
             });
         }
+        
+        public static void AddCookieForOneDay(this HttpListenerContext context, string name, string value)
+        {
+            context.Response.Cookies.Add(new Cookie
+            {
+                Name = name,
+                Value = value,
+                Path = "/",
+                //кука будет жить lifetime минут, после этого сессия закончится и пользователю нужно будет реавторизироваться
+                Expires = DateTime.UtcNow.AddDays(1d)
+            });
+        }
 
         public static void DeleteCookie(this HttpListenerContext context, string name)
         {

@@ -34,5 +34,15 @@ namespace Semestr1.Models
             Studio = studio;
             AgeRating = ageRating;
         }
+        public AnimeModel(string name, string description, string imageUrl, string genre, string studio,
+            string ageRating)
+        {
+            Name = name;
+            Description = description;
+            ImageUrl = imageUrl;
+            Genre = genre;
+            Studio = studio;
+            AgeRating = ageRating;
+        }
     }
 }

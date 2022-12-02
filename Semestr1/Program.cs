@@ -5,14 +5,14 @@ using Semestr1.ORM;
 using Semestr1.Server;
 
 
-string html = "{{post.user.username}} and {{post.anime.name}}";
+string html = "";
 
 //Parse a scriban template
 var template = Template.Parse(html);
 
-var post = PostDAO.GetById(5).GetNormalModel();
 
-var result = template.RenderAsync(new { post = post});
+var result = template.RenderAsync(new { i_item = "https://www.youtube.com/watch?v=IAEim-jKLMA&list=PLzSIvl7IRPWThD1dd-cwQlIYXKNVoB4rS&index=25"});
+var temp = result.Result;
 
 //Настройка сервера
 bool _appIsRunning = true;

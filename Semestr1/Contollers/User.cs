@@ -47,7 +47,8 @@ namespace Semestr1.Contollers
                 var age = Convert.ToInt32(dict["Age"]);
                 var mobile = dict["Mobile"];
                 var username = dict["Username"];
-                var user = UserDAO.UpdateUser(sessionId,username, age, mobile);
+                var avatarUrl = dict["AvatarUrl"];
+                var user = UserDAO.UpdateUser(sessionId,username, age, mobile,avatarUrl);
                 if (user != null)
                 {
                     context.Response.Redirect(@"http://localhost:8800/user/profile");

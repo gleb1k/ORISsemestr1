@@ -44,8 +44,9 @@ namespace Semestr1.Contollers
                 var animeStudio = dict["Studio"];
                 var animeAgeRating = dict["AgeRating"];
                 var animeDescription = dict["Description"];
+                var animeImageUrl = dict["ImageUrl"];
 
-                var anime = AnimeDAO.Add(animeName, animeDescription, animeGenre, animeStudio, animeAgeRating);
+                var anime = AnimeDAO.Add(animeName, animeDescription, animeGenre, animeStudio, animeAgeRating, animeImageUrl);
                 
                 if (anime != null)
                 {

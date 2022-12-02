@@ -49,7 +49,10 @@ public class Auth
             var user = UserDAO.Add(dict["Login"], dict["Password"]);
             if (user != null)
             {
-                context.AddCookie("session-id", user.Id.ToString(), 20d);
+                if (dict.ContainsKey("Checkbox"))
+                    context.AddCookieForOneDay("session-id", user.Id.ToString());
+                else
+                    context.AddCookie("session-id", user.Id.ToString(), 20d);
                 context.Response.Redirect(@"http://localhost:8800/user/profile");
                 return;
             }
@@ -77,7 +80,11 @@ public class Auth
             var user = UserDAO.Get(dict["Login"], dict["Password"]);
             if (user != null)
             {
-                context.AddCookie("session-id", user.Id.ToString(), 20d);
+                if (dict.ContainsKey("Checkbox"))
+                    context.AddCookieForOneDay("session-id", user.Id.ToString());
+                else
+                    context.AddCookie("session-id", user.Id.ToString(), 20d);
+                
                 context.Response.Redirect(@"http://localhost:8800/user/profile");
                 return;
             }
@@ -94,6 +101,5 @@ public class Auth
         context.Response.StatusCode = 500;
         context.Response.ContentType = "text/plain; charset=utf-8";
         await context.Response.OutputStream.WriteAsync(Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
-
     }
 }

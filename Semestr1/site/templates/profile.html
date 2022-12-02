@@ -5,12 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Профиль</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <link rel="stylesheet" href="/profile/profile.css">
     <link rel="icon" href="/icons/icon.png" type="image/x-icon">
-    <link href="/css/header.css" rel="stylesheet">
+    <link href="/data/header/header.css" rel="stylesheet">
+    <script src="/data/header/header.js"></script>
 </head>
 
 <body>
@@ -26,23 +27,31 @@
             </ul>
 
             <div class="text-end">
-                <a href="http://localhost:8800/auth/login" class="btn btn-outline-light me-2">Войти</a>
-                <a href="http://localhost:8800/auth/register" class="btn btn-warning">Зарегистрироваться</a>
-                <a id="profile" class="text-decoration-none text-white"
-                   href="http://localhost:8800/user/profile">Профиль</a>
-                <a id="singOut" class="text-decoration-none text-white"
-                   href="http://localhost:8800/user/signout">Выйти из аккаунта</a>
+                <div id="signin_block">
+                    <a href="http://localhost:8800/auth/login" class="btn btn-outline-light me-2">Войти</a>
+                    <a href="http://localhost:8800/auth/register" class="btn btn-warning">Зарегистрироваться</a>
+                </div>
+                <div id="profile_block">
+                    <a id="profile" class="text-decoration-none text-white"
+                       href="http://localhost:8800/user/profile">Профиль</a>
+                </div>
 
             </div>
         </div>
     </div>
 </header>
 
+
+<script type="text/javascript">
+    showHide();
+</script>
+
 <main>
     <div class="container">
         <div class="row d-flex justify-content-center mt-5">
             <div class="col-md-3 text-Start mb-5 pb-5">
-                <img id="avatar" src="" class="rounded float-start" alt="Avatar">
+                <img id="avatar" src="{{avatar_url | object.default "/images/default_avatar.jpg"}}" class="rounded float-start" alt="Avatar">
+
                 <h1 class="display-6">{{username | object.default "Не задано"}}</h1>
             </div>
             <div class="col-md-9">
@@ -66,14 +75,22 @@
                             <input type="tel" class="form-control" id="floatingInput" name="Mobile">
                             <label for="floatingInput">Номер телефона</label>
                         </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingInput" name="AvatarUrl">
+                            <label for="floatingInput">Url аватарки</label>
+                        </div>
                         <div class="enter_btn_container">
                             <button class="btn btn-outline-light bg-dark" type="submit">Изменить</button>
                         </div>
+                        
                     </div>
                 </form>
+                <a id="singOut" class="text-decoration-none"
+                   href="http://localhost:8800/user/signout">Выйти из аккаунта</a>
             </div>
         </div>
 </main>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

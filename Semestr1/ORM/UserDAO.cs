@@ -46,7 +46,7 @@ namespace Semestr1.ORM
         }
 
 
-        public static UserModel? UpdateUser(int userId, string username, int age, string mobile)
+        public static UserModel? UpdateUser(int userId, string username, int age, string mobile, string avatarUrl)
         {
             if (!CheckExistenceById(userId))
                 return null;
@@ -54,7 +54,8 @@ namespace Semestr1.ORM
             string nonQuery = $"Update Users " +
                               $"Set age='{age}'," +
                               $"mobile='{mobile}', " +
-                              $"username='{username}'" +
+                              $"username='{username}'," +
+                              $"avatarurl='{avatarUrl}'" +
                               $"from (select * from Users where id = {userId}) as Selected " +
                               $"where users.id = Selected.id";
 

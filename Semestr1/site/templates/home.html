@@ -5,12 +5,13 @@
     <meta charset="utf-8">
     <title>Главная</title>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
     <link rel="icon" href="/icons/icon.png" type="image/x-icon">
     <link rel="stylesheet" href="/home/home.css">
-    <link href="/css/header.css" rel="stylesheet">
+    <link href="/data/header/header.css" rel="stylesheet">
+    <script src="/data/header/header.js"></script>
 </head>
 
 <body>
@@ -26,26 +27,32 @@
             </ul>
 
             <div class="text-end">
-                <a href="http://localhost:8800/auth/login" class="btn btn-outline-light me-2">Войти</a>
-                <a href="http://localhost:8800/auth/register" class="btn btn-warning">Зарегистрироваться</a>
-                <a id="profile" class="text-decoration-none text-white"
-                   href="http://localhost:8800/user/profile">Профиль</a>
-                <a id="singOut" class="text-decoration-none text-white"
-                   href="http://localhost:8800/user/signout">Выйти из аккаунта</a>
+                <div id="signin_block">
+                    <a href="http://localhost:8800/auth/login" class="btn btn-outline-light me-2">Войти</a>
+                    <a href="http://localhost:8800/auth/register" class="btn btn-warning">Зарегистрироваться</a>
+                </div>
+                <div id="profile_block">
+                    <a id="profile" class="text-decoration-none text-white"
+                       href="http://localhost:8800/user/profile">Профиль</a>
+                </div>
+                
             </div>
         </div>
     </div>
 </header>
 
-<main>
+<script type="text/javascript">
+    showHide();
+</script>
 
+<main>
     <div class="container-xl">
 
         <button type="button" class="btn btn-outline-dark mt-2 " data-bs-toggle="modal" data-bs-target="#add_anime">
             Добавить аниме
         </button>
         <div class="modal fade" id="add_anime" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Введите данные</h5>
@@ -76,6 +83,10 @@
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="floatingInput" name="Description">
                                 <label for="floatingInput">Описание</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingInput" name="ImageUrl">
+                                <label for="floatingInput">Ссылка на картинку</label>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -142,7 +153,8 @@
         <div class="row bg-dark mt-3 rounded row-cols-4">
             <div id="user" class="col-4 ">
                 <div class="user text-white mt-2">
-                    <!--картинку сюда -->
+                    <img class="rounded-circle"
+                         src="{{post.user.avatar_url | object.default "/images/default_avatar.jpg"}}" width="50px" height="50px">
                     <p class="fs-5 d-inline ms-1 ">{{post.user.username | object.default "Не задано"}}</p>
                     <p class="fs-5 d-inline ms-1 ">{{post.name | object.default "Не задано"}}</p>
                 </div>
@@ -152,7 +164,7 @@
             </div>
             <div class="col-3">
                 <img class="w-100 mt-2 mb-2 rounded"
-                     src="https://static.insales-cdn.com/images/products/1/3612/512323100/1.jpg">
+                     src="{{post.anime.image_url | object.default "/images/default_avatar.jpg"}}">
             </div>
             <div class="col-9 text-white align-items-c">
                 <div class="info">

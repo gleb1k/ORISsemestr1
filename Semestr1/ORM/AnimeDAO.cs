@@ -18,19 +18,27 @@ namespace Semestr1.ORM
             if (CheckExistenceByName(name))
                 return null;
             
-
             var myOrm = new MyORM(ConnectionString);
+
+            myOrm.AddParameter($"@name",name);
+            myOrm.AddParameter($"@description",description);
+            myOrm.AddParameter($"@genre",genre);
+            myOrm.AddParameter($"@studio",studio);
+            myOrm.AddParameter($"@ageRating",ageRating);
+            myOrm.AddParameter($"@imageUrl",imageUrl);
+            
+
             string nonQuery = $"insert into Animes (Name,description,genre,studio, agerating,imageurl) " +
                               $"VALUES " +
                               $"(" +
-                              $"'{name}'," +
-                              $"'{description}'," +
-                              $"'{genre}'," +
-                              $"'{studio}'," +
-                              $"'{ageRating}'," +
-                              $"'{imageUrl}'" +
+                              $"'{@name}'," +
+                              $"'{@description}'," +
+                              $"'{@genre}'," +
+                              $"'{@studio}'," +
+                              $"'{@ageRating}'," +
+                              $"'{@imageUrl}'" +
                               $") RETURNING id;";
-
+            
             var addedId = myOrm.ExecuteScalar<int>(nonQuery);
             var anime = GetById(addedId);
 

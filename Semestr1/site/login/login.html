@@ -5,71 +5,83 @@
     <meta charset="utf-8">
     <title>Войти</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="icon" href="/icons/icon.png" type="image/x-icon">
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     
-    <link href="/login/login.css" rel="stylesheet">
-    <link href="/css/header.css" rel="stylesheet">
+    <link rel="icon" href="/icons/icon.png" type="image/x-icon">
+    <link href="/data/auth/auth.css" rel="stylesheet">
+    <script src="/data/auth/auth.js"></script>
+    <link href="/data/header/header.css" rel="stylesheet">
+    <script src="/data/header/header.js"></script>
 </head>
 
 <body>
 
-<header id="myHeader" class="p-3 bg-dark text-white">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="http://localhost:8800/anime/home"
-               class="navbar-brand align-items-center mb-2 mb-lg-0 text-white text-decoration-none">Anime Booba</a>
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="http://localhost:8800/anime/home" class="nav-link px-2 text-white ">Главная</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">Форум</a></li>
-            </ul>
+    <header id="myHeader" class="p-3 bg-dark text-white">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="http://localhost:8800/anime/home"
+                    class="navbar-brand align-items-center mb-2 mb-lg-0 text-white text-decoration-none">Anime Booba</a>
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="http://localhost:8800/anime/home" class="nav-link px-2 text-white ">Главная</a></li>
+                    <li><a href="#" class="nav-link px-2 text-white">Форум</a></li>
+                </ul>
 
-            <div class="text-end">
-                <a href="http://localhost:8800/auth/login" class="btn btn-outline-light me-2">Войти</a>
-                <a href="http://localhost:8800/auth/register" class="btn btn-warning">Зарегистрироваться</a>
-                <a id="profile" class="text-decoration-none text-white"
-                   href="http://localhost:8800/user/profile">Профиль</a>
-                <a id="singOut" class="text-decoration-none text-white"
-                   href="http://localhost:8800/user/signout">Выйти из аккаунта</a>
+                <div class="text-end">
+                    <div id="signin_block">
+                        <a href="http://localhost:8800/auth/login" class="btn btn-outline-light me-2">Войти</a>
+                        <a href="http://localhost:8800/auth/register" class="btn btn-warning">Зарегистрироваться</a>
+                    </div>
+                    <div id="profile_block">
+                        <a id="profile" class="text-decoration-none text-white"
+                            href="http://localhost:8800/user/profile">Профиль</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<main class="form-signin">
-    <div class="text-center mt-5">
-        <form method="post" action="http://localhost:8800/auth/loginPOST">
-            <!-- <img class="mt-4" src="" height="72" alt="Logo"> -->
-            <h1 class="h3 mb-3 fw-normal">Вход в аккаунт</h1>
-            <div class="form-floating">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@mail.ru" name="Login">
-                <label for="floatingInput">Email</label>
+    <script type="text/javascript">
+        showHide();
+    </script>
+
+    <main class="form-signin">
+        <div class="text-center mt-5">
+            
+            <div class="form_container">
+                <form novalidate id="main_form" onsubmit="if (!validate()){return false;}" action="http://localhost:8800/auth/loginPOST" method="Post"> 
+                    <!-- <img class="mt-4" src="" height="72" alt="Logo"> -->
+                    <h1 class="h3 mb-3 fw-normal">Вход в аккаунт</h1>
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="login" placeholder="name@mail.ru" name="Login">
+                        <label for="login">Email</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="password" placeholder="Password" name="Password">
+                        <label for="password">Пароль</label>
+                    </div>
+
+                    <p class="error" id="loginErr">
+
+                    </p>
+
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input id="chechbox" type="checkbox" value="remember-me" name="Checkbox"> Запомнить меня
+                        </label>
+                    </div>
+                    <div class="mt-2">
+                        <button class="w-100 btn btn-lg btn-primary" >Войти</button>
+                    </div>
+                </form>
             </div>
+        </div>
+    </main>
 
-            <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="Password">
-                <label for="floatingPassword">Пароль</label>
-            </div>
-
-            <div class="checkbox mb-3" >
-                <label>
-                    <input type="checkbox" value="remember-me"> Запомнить меня
-                </label>
-            </div>
-
-            <div class="mt-3">
-                <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
-            </div>
-        </form>
-    </div>
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
 </body>
 
 </html>
-

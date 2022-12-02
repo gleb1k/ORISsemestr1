@@ -144,33 +144,33 @@ namespace Semestr1.ORM
         //    }
         //    return list;
         //}
-        ///// <summary>
-        ///// Inserts values into table
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="entity"></param>
-        //public void Insert<T>(T entity)
-        //{
-        //    Type t = typeof(T);
-        //    var args = t.GetProperties();
-
-        //    var values = args.Select(value => $"@{value.GetValue(entity)}").ToArray();
-
-        //    var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
-        //    var argsWithoutDog = args.Select(x => x.Name).ToArray();
-
-        //    foreach (var parameter in args)
-        //    {
-        //        var sqlParameter = new SqlParameter($"@{parameter.Name}", parameter.GetValue(entity));
-        //        _cmd.Parameters.Add(sqlParameter);
-        //    }
-
-        //    string nonQuery = $"SET IDENTITY_INSERT {t.Name}s ON " +
-        //    $"INSERT INTO {t.Name}s ({string.Join(", ", argsWithoutDog)}) VALUES ({string.Join(", ", argsWithDog)}) " +
-        //    $"SET IDENTITY_INSERT {t.Name}s OFF";
-
-        //    ExecuteNonQuery(nonQuery);
-        //}
+        /// <summary>
+        /// Inserts values into table
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        // public void Insert<T>(T entity)
+        // {
+        //     Type t = typeof(T);
+        //     var args = t.GetProperties();
+        //
+        //     var values = args.Select(value => $"@{value.GetValue(entity)}").ToArray();
+        //
+        //     var argsWithDog = args.Select(value => $"@{value.ToString().Split(" ")[1]}").ToArray();
+        //     var argsWithoutDog = args.Select(x => x.Name).ToArray();
+        //
+        //     foreach (var parameter in args)
+        //     {
+        //         var sqlParameter = new NpgsqlParameter($"@{parameter.Name}", parameter.GetValue(entity));
+        //         _cmd.Parameters.Add(sqlParameter);
+        //     }
+        //
+        //     string nonQuery = $"SET IDENTITY_INSERT {t.Name}s ON " +
+        //     $"INSERT INTO {t.Name}s ({string.Join(", ", argsWithoutDog)}) VALUES ({string.Join(", ", argsWithDog)}) " +
+        //     $"SET IDENTITY_INSERT {t.Name}s OFF";
+        //
+        //     ExecuteNonQuery(nonQuery);
+        // }
         ////todo
         ///// <summary>
         ///// Updating field by VALUES. ID doesn't matter!

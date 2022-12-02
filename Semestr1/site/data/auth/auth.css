@@ -1,4 +1,4 @@
-main form {
+﻿main .form_container{
     max-width: 300px;
     margin: auto;
 }
@@ -22,8 +22,16 @@ form input[type="password"] {
 }
 .form-signin .checkbox {
     font-weight: 400;
-  }
-  
-  .form-signin .form-floating:focus-within {
+}
+
+.form-signin .form-floating:focus-within {
     z-index: 2;
-  }
+}
+.error{
+    margin-top: 6px;
+    color: red;
+}
+.text-center {
+    max-width: 300px;
+    margin: auto;
+}
