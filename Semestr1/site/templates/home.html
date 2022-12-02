@@ -153,8 +153,8 @@
         <div class="row bg-dark mt-3 rounded row-cols-4">
             <div id="user" class="col-4 ">
                 <div class="user text-white mt-2">
-                    <img class="rounded-circle"
-                         src="{{post.user.avatar_url | object.default "/images/default_avatar.jpg"}}" width="50px" height="50px">
+                    <img id="avatar" class="rounded-circle"
+                         src="{{post.user.avatar_url | object.default "/images/default_avatar.jpg"}}" width="50px" height="50px" >
                     <p class="fs-5 d-inline ms-1 ">{{post.user.username | object.default "Не задано"}}</p>
                     <p class="fs-5 d-inline ms-1 ">{{post.name | object.default "Не задано"}}</p>
                 </div>
