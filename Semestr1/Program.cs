@@ -9,14 +9,14 @@ using Semestr1.Server;
 //
 // //Parse a scriban template
 // var template = Template.Parse(html);
-//
-//
-// var result = template.RenderAsync(new { i_item = "https://www.youtube.com/watch?v=IAEim-jKLMA&list=PLzSIvl7IRPWThD1dd-cwQlIYXKNVoB4rS&index=25"});
-// var temp = result.Result;
-var orm = new MyORM(ServerSettings._connectionString);
-var query = "select * from users";
-orm.ExecuteQuery<UserModel>(query);
-orm.ExecuteQuery<UserModel>(query);
+// //
+// //
+// // var result = template.RenderAsync(new { i_item = "https://www.youtube.com/watch?v=IAEim-jKLMA&list=PLzSIvl7IRPWThD1dd-cwQlIYXKNVoB4rS&index=25"});
+// // var temp = result.Result;
+// var orm = new MyORM(ServerSettings._connectionString);
+// var query = "select * from users";
+// orm.ExecuteQuery<UserModel>(query);
+// orm.ExecuteQuery<UserModel>(query);
 
 
 //Настройка сервера

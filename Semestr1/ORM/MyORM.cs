@@ -5,25 +5,29 @@ namespace Semestr1.ORM
     public class MyORM
     {
         
-        private readonly string _connectionString ;
-        private  NpgsqlConnection _connection;
-        private  NpgsqlCommand _cmd;
+        // private readonly string _connectionString ;
+        // private  NpgsqlConnection _connection;
+        // private  NpgsqlCommand _cmd;
+        private readonly NpgsqlConnection _connection;
+        private readonly NpgsqlCommand _cmd;
 
         public MyORM(string connectionString)
         {
-            _connectionString = connectionString;
+            // _connectionString = connectionString;
+            // _connection = new NpgsqlConnection(connectionString);
+            
             _connection = new NpgsqlConnection(connectionString);
-           // _cmd = _connection.CreateCommand();
+            _cmd = _connection.CreateCommand();
         }
 
         //Колво строк
         public int ExecuteNonQuery(string query)
         {
             int noOfAffectedRows = 0;
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (_connection)
             {
                 _cmd!.CommandText = query;
-                connection!.Open();
+                _connection!.Open();
                 noOfAffectedRows = _cmd.ExecuteNonQuery();
             }
 
@@ -48,12 +52,11 @@ namespace Semestr1.ORM
             IList<T> list = new List<T>();
             Type type = typeof(T);
 
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (_connection)
             {
-                var cmd = connection.CreateCommand();
-                cmd!.CommandText = query;
-                connection.Open();
-                var reader = cmd.ExecuteReader();
+                _cmd!.CommandText = query;
+                _connection.Open();
+                var reader = _cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     T obj = (T)Activator.CreateInstance(type);
