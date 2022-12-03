@@ -59,16 +59,11 @@ public class Auth
         }
         else
         {
-            //something wasn't filled
-            context.Response.StatusCode = 400;
-            context.Response.ContentType = "text/plain; charset=utf-8";
-            context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Заполните поля!"));
+            await context.ShowError(400, "Заполните поля!");
             return;
         }
 
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "text/plain; charset=utf-8";
-        context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
+        await context.ShowError(500, "Не удалось обновить данные на сервере!");
     }
 
     [HttpPOST("loginPOST")]
@@ -84,22 +79,17 @@ public class Auth
                     context.AddCookieForOneDay("session-id", user.Id.ToString());
                 else
                     context.AddCookie("session-id", user.Id.ToString(), 20d);
-                
+
                 context.Response.Redirect(@"http://localhost:8800/user/profile");
                 return;
             }
         }
         else
         {
-            //something wasn't filled
-            context.Response.StatusCode = 400;
-            context.Response.ContentType = "text/plain; charset=utf-8";
-            await context.Response.OutputStream.WriteAsync(Encoding.UTF8.GetBytes("Заполните поля!"));
+            await context.ShowError(400, "Заполните поля!");
             return;
         }
 
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "text/plain; charset=utf-8";
-        await context.Response.OutputStream.WriteAsync(Encoding.UTF8.GetBytes("Передача данных на сервер не удалась!"));
+        await context.ShowError(500, "Не удалось обновить данные на сервере!");
     }
 }

@@ -54,3 +54,6 @@ body{
 #avatar {
     object-fit:cover;
 }
+#btn_add_anime {
+    display: block;
+}

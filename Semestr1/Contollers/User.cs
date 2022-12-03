@@ -15,10 +15,7 @@ namespace Semestr1.Contollers
             var cookie = context.Request.Cookies["session-id"];
             if (cookie == null)
             {
-                context.Response.StatusCode = 401;
-                context.Response.ContentType = "text/plain; charset=utf-8";
-                context.Response.OutputStream.Write(
-                    Encoding.UTF8.GetBytes("Вы должны войти в аккаунт, чтобы посмотреть свой профиль!"));
+                await context.ShowError(401, "Вы должны войти в аккаунт, чтобы посмотреть свой профиль!");
                 return;
             }
 
@@ -35,7 +32,7 @@ namespace Semestr1.Contollers
             //просрочилась сессия
             if (cookie == null)
             {
-                await context.ShowSessionExpired();
+                await context.ShowError(440, "Сессия просрочена");
                 return;
             }
             var dict = context.GetBodyData();
@@ -57,15 +54,11 @@ namespace Semestr1.Contollers
             }
             else
             {
-                //something wasn't filled
-                context.Response.StatusCode = 400;
-                context.Response.ContentType = "text/plain; charset=utf-8";
-                context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Заполните поля!"));
+                await context.ShowError(400, "Заполните поля!");
+                return;
             }
 
-            context.Response.StatusCode = 500;
-            context.Response.ContentType = "text/plain; charset=utf-8";
-            context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Не удалось обновить данные на сервере!"));
+            await context.ShowError(500, "Не удалось обновить данные на сервере!");
         }
 
         [HttpGET("signout")]

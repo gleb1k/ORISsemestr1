@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text;
+using System.Xml.Xsl;
 using Semestr1.Attributes;
 using Semestr1.Extensions;
 using Semestr1.Models;
@@ -26,11 +27,9 @@ namespace Semestr1.Contollers
         [HttpPOST("addPostPOST")]
         public static async Task AddPost(HttpListenerContext context)
         {
-            var cookie = context.Request.Cookies["session-id"];
-            //просрочилась сессия
-            if (cookie == null)
+            if (!context.CheckCookie("session-id"))
             {
-                await context.ShowSessionExpired();
+                await context.ShowError(440, "Вы не авторизированы");
                 return;
             }
             var dict = context.GetBodyData();
@@ -63,26 +62,18 @@ namespace Semestr1.Contollers
             }
             else
             {
-                //something wasn't filled
-                context.Response.StatusCode = 400;
-                context.Response.ContentType = "text/plain; charset=utf-8";
-                context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Заполните поля!"));
+                await context.ShowError(400, "Заполните поля!");
                 return;
             }
-
-            context.Response.StatusCode = 500;
-            context.Response.ContentType = "text/plain; charset=utf-8";
-            context.Response.OutputStream.Write(Encoding.UTF8.GetBytes("Не удалось обновить данные на сервере!"));
+            await context.ShowError(500, "Не удалось обновить данные на сервере!");
         }
         
         [HttpPOST("addtofavoritePOST")]
         public static async Task AddAnimeToFavorite(HttpListenerContext context)
         {
-            var cookie = context.Request.Cookies["session-id"];
-            //просрочилась сессия
-            if (cookie == null)
+            if (!context.CheckCookie("session-id"))
             {
-                await context.ShowSessionExpired();
+                await context.ShowError(440, "Вы не авторизированы");
                 return;
             }
         }

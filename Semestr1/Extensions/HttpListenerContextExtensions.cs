@@ -14,7 +14,7 @@ namespace Semestr1.Extensions
             var fullPath = Path.Join(PublicFolderPath, path);
             if (!File.Exists(fullPath))
             {
-                await context.Show404();
+                await context.ShowError(404, "Ресурс не найден");
             }
             else
             {
@@ -35,20 +35,12 @@ namespace Semestr1.Extensions
             }
         }
 
-        public static async Task Show404(this HttpListenerContext context)
+        public static async Task ShowError(this HttpListenerContext context, int statusCode, string message)
         {
             context.Response.ContentType = "text/html; charset=utf-8";
-            context.Response.StatusCode = 404;
+            context.Response.StatusCode = statusCode;
             await context.Response.OutputStream.WriteAsync(
-                Encoding.UTF8.GetBytes("<h2>404<h2><h3>The resource can not be found :c<h3>"));
-        }
-
-        public static async Task ShowSessionExpired(this HttpListenerContext context)
-        {
-            context.Response.ContentType = "text/html; charset=utf-8";
-            context.Response.StatusCode = 440;
-            await context.Response.OutputStream.WriteAsync(
-                Encoding.UTF8.GetBytes("<h2>440<h2><h3>Your session has expired and you must log in again.<h3>"));
+                Encoding.UTF8.GetBytes($"<p>{statusCode}<p><p>{message}<p>"));
         }
         
         /// <summary>
@@ -87,7 +79,19 @@ namespace Semestr1.Extensions
                 Expires = DateTime.UtcNow.AddMinutes(lifetime)
             });
         }
-        
+
+        public static bool CheckCookie(this HttpListenerContext context, string name)
+        {
+            var cookie = context.Request.Cookies["session-id"];
+            if (cookie == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
         public static void AddCookieForOneDay(this HttpListenerContext context, string name, string value)
         {
             context.Response.Cookies.Add(new Cookie
