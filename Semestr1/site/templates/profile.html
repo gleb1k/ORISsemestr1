@@ -12,6 +12,7 @@
     <link rel="icon" href="/icons/icon.png" type="image/x-icon">
     <link href="/data/header/header.css" rel="stylesheet">
     <script src="/data/header/header.js"></script>
+    <script src="/profile/profile.js"></script>
 </head>
 
 <body>
@@ -50,7 +51,8 @@
     <div class="container">
         <div class="row d-flex justify-content-center mt-5">
             <div class="col-md-3 text-Start mb-5 pb-5">
-                <img id="avatar" src="{{avatar_url | object.default "/images/default_avatar.jpg"}}" class="rounded float-start" alt="Avatar">
+                <img id="avatar" onerror="imageOnError("#avatar")" 
+                     src="{{avatar_url | object.default "/images/default_avatar.jpg"}}" class="rounded float-start" alt="Аватар задан некорректно">
 
                 <h1 class="display-6">{{username | object.default "Не задано"}}</h1>
             </div>
@@ -64,19 +66,19 @@
                     <h4>Введите данные, которые хотите изменить</h4>
                     <div class="fields">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="floatingInput" name="Username">
+                            <input type="text" class="form-control" id="floatingInput" name="Username" required>
                             <label for="floatingInput">Имя пользователя</label>
                         </div>
                         <div class="form-floating">
-                            <input type="number" class="form-control" id="floatingInput" name="Age">
+                            <input type="number" class="form-control" id="floatingInput" name="Age" required>
                             <label for="floatingInput">Возраст</label>
                         </div>
                         <div class="form-floating">
-                            <input type="tel" class="form-control" id="floatingInput" name="Mobile">
+                            <input type="tel" class="form-control" id="floatingInput" name="Mobile" required>
                             <label for="floatingInput">Номер телефона</label>
                         </div>
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="floatingInput" name="AvatarUrl">
+                            <input type="url" class="form-control" id="floatingInput" name="AvatarUrl" required>
                             <label for="floatingInput">Url аватарки</label>
                         </div>
                         <div class="enter_btn_container">

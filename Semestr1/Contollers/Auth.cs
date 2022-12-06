@@ -44,7 +44,7 @@ public class Auth
     public static async Task Register(HttpListenerContext context)
     {
         var dict = context.GetBodyData();
-        if (dict.CheckEmptyness())
+        if (dict.CheckEmptyness() && Validation.CheckLoginAndPassword(dict["Login"], dict["Password"]))
         {
             var user = UserDAO.Add(dict["Login"], dict["Password"]);
             if (user != null)
@@ -59,10 +59,9 @@ public class Auth
         }
         else
         {
-            await context.ShowError(400, "Заполните поля!");
+            await context.ShowError(400, "Невалидные данные");
             return;
         }
-
         await context.ShowError(500, "Не удалось обновить данные на сервере!");
     }
 
@@ -70,7 +69,7 @@ public class Auth
     public static async Task Login(HttpListenerContext context)
     {
         var dict = context.GetBodyData();
-        if (dict.CheckEmptyness())
+        if (dict.CheckEmptyness() && Validation.CheckLoginAndPassword(dict["Login"], dict["Password"]))
         {
             var user = UserDAO.Get(dict["Login"], dict["Password"]);
             if (user != null)
@@ -86,7 +85,7 @@ public class Auth
         }
         else
         {
-            await context.ShowError(400, "Заполните поля!");
+            await context.ShowError(400, "Невалидные данные");
             return;
         }
 

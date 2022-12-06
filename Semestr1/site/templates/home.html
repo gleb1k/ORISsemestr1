@@ -101,9 +101,9 @@
         <div class="row bg-dark mt-3 rounded row-cols-4">
             <div id="user" class="col-4 ">
                 <div class="user text-white mt-2">
-                    <img id="avatar" class="rounded-circle"
+                    <img id="avatar" class="rounded-circle" alt="Аватар задан некорректно"
                          src="{{post.user.avatar_url | object.default "/images/default_avatar.jpg"}}" width="50px"
-                    height="50px" >
+                    height="50px"  >
                     <p class="fs-5 d-inline ms-1 ">{{post.user.username | object.default "Не задано"}}</p>
                     <p class="fs-5 d-inline ms-1 ">{{post.name | object.default "Не задано"}}</p>
                 </div>
@@ -113,7 +113,8 @@
                     любимое</a>
             </div>
             <div class="col-3">
-                <img class="w-100 mt-2 mb-2 rounded"
+                <img id="anime image" class="w-100 mt-2 mb-2 rounded" onerror="imageOnError()" 
+                     alt="Картинка задана некорректно"
                      src="{{post.anime.image_url | object.default "/images/default_avatar.jpg"}}">
             </div>
             <div class="col-9 text-white align-items-c">
@@ -160,31 +161,31 @@
                         <div class="modal-body">
                             <form id="add_anime_form" method="post" action="http://localhost:8800/anime/addPostPOST">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingInput" name="PostName">
+                                    <input type="text" class="form-control" id="floatingInput" name="PostName" required>
                                     <label for="floatingInput">Название записи</label>
                                 </div>
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingInput" name="Name">
+                                    <input type="text" class="form-control" id="floatingInput" name="Name" required>
                                     <label for="floatingInput">Название</label>
                                 </div>
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingInput" name="Genre">
+                                    <input type="text" class="form-control" id="floatingInput" name="Genre" required>
                                     <label for="floatingInput">Жанр</label>
                                 </div>
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingInput" name="Studio">
+                                    <input type="text" class="form-control" id="floatingInput" name="Studio" required>
                                     <label for="floatingInput">Студия</label>
                                 </div>
                                 <div class="form-floating">
-                                    <input type="number" class="form-control" id="floatingInput" name="AgeRating">
+                                    <input type="number" class="form-control" id="floatingInput" name="AgeRating" required>
                                     <label for="floatingInput">Возрастной рейтинг</label>
                                 </div>
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingInput" name="Description">
+                                    <input type="text" class="form-control" id="floatingInput" name="Description" required>
                                     <label for="floatingInput">Описание</label>
                                 </div>
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingInput" name="ImageUrl">
+                                    <input type="url" class="form-control" id="floatingInput" name="ImageUrl" required>
                                     <label for="floatingInput">Ссылка на картинку</label>
                                 </div>
                             </form>

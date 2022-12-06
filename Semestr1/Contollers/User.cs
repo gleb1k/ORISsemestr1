@@ -21,6 +21,11 @@ namespace Semestr1.Contollers
 
             var sessionId = Convert.ToInt32(context.Request.Cookies["session-id"]?.Value);
             var user = UserDAO.GetById(sessionId);
+            if (user == null)
+            {
+                await context.ShowError(404, "User doesn't found");
+                return;
+            }
             await ScribanMethods.GenerateProfilePage(user.GetNormalModel());
             await context.ShowPage(@"\profile\profile.html");
         }

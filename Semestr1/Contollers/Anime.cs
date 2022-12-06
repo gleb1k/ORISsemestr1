@@ -49,7 +49,6 @@ namespace Semestr1.Contollers
                 
                 if (anime != null)
                 {
-
                     var postName = dict["PostName"];
                     var post = PostDAO.Add(postName,userId, anime.Id);
 
@@ -76,6 +75,8 @@ namespace Semestr1.Contollers
                 await context.ShowError(440, "Вы не авторизированы");
                 return;
             }
+            //todo
+            await context.ShowError(440, "Не реализовано");
         }
     }
 }
