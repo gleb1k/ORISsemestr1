@@ -21,13 +21,13 @@ namespace Semestr1.Contollers
                 newPosts.Add(post.GetNormalModel());
             }
             
-            await ScribanMethods.GenerateHomePage(newPosts);
+            await ScribanUtils.GenerateHomePage(newPosts);
             await context.ShowPage(@"\home\home.html");
         }
         [HttpPOST("addPostPOST")]
         public static async Task AddPost(HttpListenerContext context)
         {
-            if (!context.CheckCookie("session-id"))
+            if (!context.isAuthorized())
             {
                 await context.ShowError(440, "Вы не авторизированы");
                 return;
@@ -70,7 +70,7 @@ namespace Semestr1.Contollers
         [HttpPOST("addtofavoritePOST")]
         public static async Task AddAnimeToFavorite(HttpListenerContext context)
         {
-            if (!context.CheckCookie("session-id"))
+            if (!context.isAuthorized())
             {
                 await context.ShowError(440, "Вы не авторизированы");
                 return;

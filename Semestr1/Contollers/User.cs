@@ -12,13 +12,11 @@ namespace Semestr1.Contollers
         [HttpGET("profile")]
         public static async Task ShowProfile(HttpListenerContext context)
         {
-            var cookie = context.Request.Cookies["session-id"];
-            if (cookie == null)
+            if (!context.isAuthorized())
             {
                 await context.ShowError(401, "Вы должны войти в аккаунт, чтобы посмотреть свой профиль!");
                 return;
             }
-
             var sessionId = Convert.ToInt32(context.Request.Cookies["session-id"]?.Value);
             var user = UserDAO.GetById(sessionId);
             if (user == null)
@@ -26,16 +24,14 @@ namespace Semestr1.Contollers
                 await context.ShowError(404, "User doesn't found");
                 return;
             }
-            await ScribanMethods.GenerateProfilePage(user.GetNormalModel());
+            await ScribanUtils.GenerateProfilePage(user.GetNormalModel());
             await context.ShowPage(@"\profile\profile.html");
         }
 
         [HttpPOST("updatePOST")]
         public static async Task Update(HttpListenerContext context)
         {
-            var cookie = context.Request.Cookies["session-id"];
-            //просрочилась сессия
-            if (cookie == null)
+            if (!context.isAuthorized())
             {
                 await context.ShowError(440, "Сессия просрочена");
                 return;
@@ -62,14 +58,16 @@ namespace Semestr1.Contollers
                 await context.ShowError(400, "Заполните поля!");
                 return;
             }
-
             await context.ShowError(500, "Не удалось обновить данные на сервере!");
         }
 
         [HttpGET("signout")]
         public static async Task SignOut(HttpListenerContext context)
         {
-            context.DeleteCookie("session-id");
+            if (context.isAuthorized())
+            {
+                context.DeleteCookie("session-id");
+            }
             context.Response.Redirect(@"http://localhost:8800/anime/home");
         }
     }

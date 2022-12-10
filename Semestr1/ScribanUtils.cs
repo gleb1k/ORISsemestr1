@@ -4,7 +4,7 @@ using Scriban;
 
 namespace Semestr1;
 
-public static class ScribanMethods
+public static class ScribanUtils
 {
     private const string PublicFolder = "site";
     private static readonly string PublicFolderPath = Path.Join(Directory.GetCurrentDirectory(), PublicFolder);

@@ -105,10 +105,12 @@
                          src="{{post.user.avatar_url | object.default "/images/default_avatar.jpg"}}" width="50px"
                     height="50px"  >
                     <p class="fs-5 d-inline ms-1 ">{{post.user.username | object.default "Не задано"}}</p>
-                    <p class="fs-5 d-inline ms-1 ">{{post.name | object.default "Не задано"}}</p>
                 </div>
             </div>
-            <div class="col-8 text-end text-white mt-2">
+            <div class="col-5 text-center text-white mt-2">
+                <p class="fs-4 d-inline ms-1 ">{{post.name | object.default "Не задано"}}</p>
+            </div>
+            <div class="col-3 text-end text-white mt-2">
                 <a class="text text-decoration-none text-white" href="http://localhost:8800/user/profile">Добавить в
                     любимое</a>
             </div>
@@ -146,7 +148,7 @@
         
         
         
-        <div id="add_anime_col" class="col d-flex justify-content-center">
+        <div id="add_anime_col" class="col d-flex justify-content-center mb-2">
             <button id="btn_add_anime" type="button" class="btn btn-outline-dark mt-2 " data-bs-toggle="modal" data-bs-target="#addBackdrop">
                 Добавить аниме
             </button>

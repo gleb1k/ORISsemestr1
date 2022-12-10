@@ -57,7 +57,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="site\data\js" />
-	  <Folder Include="site\workplace" />
 	</ItemGroup>
 
 </Project>

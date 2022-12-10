@@ -10,7 +10,7 @@ namespace Semestr1.Extensions
     public static class NameValueCollectionExtensions
     {
         /// <summary>
-        ///     A NameValueCollection extension method that converts the @this to a dictionary.
+        /// A NameValueCollection extension method that converts the @this to a dictionary.
         /// </summary>
         /// <param name="this">The @this to act on.</param>
         /// <returns>@this as an IDictionary&lt;string,object&gt;</returns>

@@ -4,7 +4,6 @@ namespace Semestr1.ORM
 {
     public class MyORM
     {
-        
         // private readonly string _connectionString ;
         // private  NpgsqlConnection _connection;
         // private  NpgsqlCommand _cmd;
@@ -15,7 +14,7 @@ namespace Semestr1.ORM
         {
             // _connectionString = connectionString;
             // _connection = new NpgsqlConnection(connectionString);
-            
+
             _connection = new NpgsqlConnection(connectionString);
             _cmd = _connection.CreateCommand();
         }
@@ -101,7 +100,7 @@ namespace Semestr1.ORM
                 return (long)_cmd.ExecuteScalar();
             }
         }
-        
+
         #region useless
 
         ///// <summary>

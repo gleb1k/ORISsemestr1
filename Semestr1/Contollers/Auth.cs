@@ -13,36 +13,42 @@ public class Auth
     [HttpGET("register")]
     public static async Task ShowRegister(HttpListenerContext context)
     {
-        var cookie = context.Request.Cookies["session-id"];
-        if (cookie == null)
+        if (context.isAuthorized())
+        {
+            context.Response.StatusCode = 305;
+            context.Response.Redirect(@"http://localhost:8800/user/profile");
+        }
+        else
         {
             context.Response.StatusCode = 200;
             await context.ShowPage(@"\register\register.html");
-            return;
         }
-
-        context.Response.StatusCode = 305;
-        context.Response.Redirect(@"http://localhost:8800/user/profile");
     }
 
     [HttpGET("login")]
     public static async Task ShowLogin(HttpListenerContext context)
     {
-        var cookie = context.Request.Cookies["session-id"];
-        if (cookie == null)
+        if (context.isAuthorized())
+        {
+            context.Response.StatusCode = 305;
+            context.Response.Redirect(@"http://localhost:8800/user/profile");
+        }
+        else
         {
             context.Response.StatusCode = 200;
             await context.ShowPage(@"\login\login.html");
-            return;
         }
-
-        context.Response.StatusCode = 305;
-        context.Response.Redirect(@"http://localhost:8800/user/profile");
     }
 
     [HttpPOST("registerPOST")]
     public static async Task Register(HttpListenerContext context)
     {
+        //уже авторизирован
+        if (context.isAuthorized())
+        {
+            context.Response.Redirect(@"http://localhost:8800/user/profile");
+            return;
+        }
         var dict = context.GetBodyData();
         if (dict.CheckEmptyness() && Validation.CheckLoginAndPassword(dict["Login"], dict["Password"]))
         {
@@ -68,6 +74,12 @@ public class Auth
     [HttpPOST("loginPOST")]
     public static async Task Login(HttpListenerContext context)
     {
+        //уже авторизирован
+        if (context.isAuthorized())
+        {
+            context.Response.Redirect(@"http://localhost:8800/user/profile");
+            return;
+        }
         var dict = context.GetBodyData();
         if (dict.CheckEmptyness() && Validation.CheckLoginAndPassword(dict["Login"], dict["Password"]))
         {
@@ -88,7 +100,6 @@ public class Auth
             await context.ShowError(400, "Невалидные данные");
             return;
         }
-
         await context.ShowError(500, "Не удалось обновить данные на сервере!");
     }
 }

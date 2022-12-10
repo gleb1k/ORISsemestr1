@@ -4,7 +4,7 @@ using System.Web;
 
 namespace Semestr1.Extensions
 {
-    public static class Extensions
+    public static class HttpListenerContextExtensions
     {
         private const string PublicFolder = "site";
         private static readonly string PublicFolderPath = Path.Join(Directory.GetCurrentDirectory(), PublicFolder);
@@ -81,6 +81,19 @@ namespace Semestr1.Extensions
         }
 
         public static bool CheckCookie(this HttpListenerContext context, string name)
+        {
+            var cookie = context.Request.Cookies[name];
+            if (cookie == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        
+        public static bool isAuthorized(this HttpListenerContext context)
         {
             var cookie = context.Request.Cookies["session-id"];
             if (cookie == null)
